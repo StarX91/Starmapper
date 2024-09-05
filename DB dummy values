@@ -1,0 +1,11 @@
+-- Insert users into the Users table
+INSERT INTO Users (username, email, password_hash) VALUES 
+('admin', 'admin@example.com', 'password'), 
+('user1', 'user1@example.com', 'password1'), 
+('user2', 'user2@example.com', 'password2');
+('atharv','atharvmalve.student@gmail.com','123456789');
+
+-- Optionally, you can insert users one by one:
+-- INSERT INTO Users (username, email, password_hash) VALUES ('admin', 'admin@example.com', 'password');
+-- INSERT INTO Users (username, email, password_hash) VALUES ('user1', 'user1@example.com', 'password1');
+-- INSERT INTO Users (username, email, password_hash) VALUES ('user2', 'user2@example.com', 'password2');
