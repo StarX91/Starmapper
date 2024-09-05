@@ -615,7 +615,7 @@ const Main = () => {
   ]);
 
   const [projectSections, setProjectSections] = useState([
-    { id: 1, label: "Project_Name_1", date: "10 June 2024" },
+    { id: 1, label: "Demo_Project", date: "10 June 2024" },
   ]);
 
   const [activeItem, setActiveItem] = useState({ section: null, id: null });
