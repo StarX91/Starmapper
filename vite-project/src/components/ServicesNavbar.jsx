@@ -10,6 +10,7 @@ import { IoIosPeople, IoIosAddCircle } from "react-icons/io";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../context/ProfileImageContext";
+import { IoIosHelpCircle } from "react-icons/io";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -88,9 +89,7 @@ const Navbar = () => {
           </button> */}
           <button
             ref={(el) => (buttonsRef.current["controlCenter"] = el)}
-            onClick={() =>
-              handleButtonClick("controlCenter", "/control-center")
-            }
+            onClick={() => handleButtonClick("controlCenter", "/planner")}
             className={`w-28 h-24 my-2 rounded-sm flex flex-col items-center relative z-10 ${
               activeButton === "controlCenter" ? "text-white" : "text-zinc-400"
             }`}
@@ -120,13 +119,13 @@ const Navbar = () => {
           </button>
           <button
             ref={(el) => (buttonsRef.current["add"] = el)}
-            onClick={() => handleButtonClick("add", "/add")}
+            onClick={() => handleButtonClick("add", "/help")}
             className={`w-32 h-36 my-1 rounded-sm flex flex-col items-center relative z-10 ${
               activeButton === "add" ? "text-white" : "text-zinc-400"
             }`}
           >
-            <IoIosAddCircle className="w-12 h-9" />
-            <p className="text-[12px] font-semibold">Add</p>
+            <IoIosHelpCircle className="w-12 h-9" />
+            <p className="text-[12px] font-semibold">Help</p>
           </button>
         </div>
         <div className="relative">

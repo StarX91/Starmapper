@@ -657,14 +657,14 @@ const CreatePlan = () => {
                   htmlFor="selectProject"
                   className="text-neutral-400 text-md font-semibold"
                 >
-                  Select Project
+                  Select Plan
                 </label>
                 <select
                   id="selectProject"
                   className="mt-2 w-full p-2 rounded-md bg-neutral-800 text-neutral-400"
                 >
                   <option value="" disabled selected>
-                    Select Project
+                    Select Plan
                   </option>
                   {/* Add your project options here */}
                 </select>
