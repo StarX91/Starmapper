@@ -12,6 +12,9 @@ import ResetPassword from "./pages/Authentication/ResetPassword";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import EditProfile from "./pages/StareXplorer/Navbar/EditProfile";
 import Edit from "./pages/StarStork/Dashboard/EditProfile";
+import Subs from "./pages/Services/Settings/Subscription/Info";
+import Profile from "./pages/Services/Settings/Profile/Info";
+
 import Edits from "./pages/Services/Dashboard/EditProfile";
 import Board from "./pages/Services/Dashboard/Board";
 import Main from "./pages/StarStork/Dashboard/Main";
@@ -23,6 +26,7 @@ import Info from "./pages/Services/Settings/Info";
 import InfoSS from "./pages/StarStork/Settings/Profile/Info";
 import Subscription from "./pages/StarStork/Settings/Subscription/Info";
 import Invoices from "./pages/StarStork/Settings/Invoices/Info";
+import ChangePassword from "./pages/StarStork/Settings/ChangePassword/Info";
 import PhoneNumber from "./pages/StarStork/Dashboard/ChangePhoneNumber";
 import { ProfileProvider } from "./context/ProfileImageContext";
 import Imageset from "./pages/StarStork/AnnotationReportTask/CreateImageset";
@@ -72,6 +76,14 @@ const App = () => {
                 <Route path="/services" element={<Board />} />
                 <Route path="/services/edit-profile" element={<Edits />} />
                 <Route path="/settings" element={<Info />} />
+                <Route
+                  path="/services/settings/subscription"
+                  element={<Subs />}
+                />
+                <Route
+                  path="/services/settings/profile"
+                  element={<Profile />}
+                />
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
                 <Route
@@ -88,6 +100,10 @@ const App = () => {
                   element={<Subscription />}
                 />
                 <Route path="/ss/settings/invoices" element={<Invoices />} />
+                <Route
+                  path="/ss/settings/changepassword"
+                  element={<ChangePassword />}
+                />
                 <Route path="/ss/art/create-imageset" element={<Imageset />} />
                 <Route path="/ss/art/create-tasks" element={<Tasks />} />
                 <Route

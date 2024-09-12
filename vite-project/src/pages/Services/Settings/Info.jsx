@@ -28,7 +28,7 @@ export default Info;
 
 import React from "react";
 import Menu from "./Menu";
-import Data from "./Data";
+import Data from "./Profile/Data";
 import Navbar from "../../../components/ServicesNavbar";
 
 const Info = () => {
