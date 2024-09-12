@@ -56,12 +56,14 @@ const Menu = () => {
             </span>
           </button>
         </Link>
-        <button className="flex items-center space-x-4 px-4 lg:px-5 py-2 border-2 border-solid border-neutral-700 text-neutral-500 rounded-md font-semibold">
-          <FaRegCreditCard />
-          <span className="text-neutral-500 font-semibold text-sm lg:text-md">
-            Invoices
-          </span>
-        </button>
+        <Link to="/services/settings/invoices">
+          <button className="flex items-center space-x-4 px-4 lg:px-11 py-2 border-2 border-solid border-neutral-700 text-neutral-500 rounded-md font-semibold">
+            <FaRegCreditCard />
+            <span className="text-neutral-500 font-semibold text-sm lg:text-md">
+              Invoices
+            </span>
+          </button>
+        </Link>
         <button className="flex items-center space-x-4 px-4 lg:px-4 py-2 border-2 border-solid border-neutral-700 text-neutral-500 rounded-md font-semibold">
           <FaShieldAlt />
           <span className="text-neutral-500 font-semibold text-sm lg:text-md">

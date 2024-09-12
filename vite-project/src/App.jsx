@@ -14,7 +14,7 @@ import EditProfile from "./pages/StareXplorer/Navbar/EditProfile";
 import Edit from "./pages/StarStork/Dashboard/EditProfile";
 import Subs from "./pages/Services/Settings/Subscription/Info";
 import Profile from "./pages/Services/Settings/Profile/Info";
-
+import Invoice from "./pages/Services/Settings/Invoices/Info";
 import Edits from "./pages/Services/Dashboard/EditProfile";
 import Board from "./pages/Services/Dashboard/Board";
 import Main from "./pages/StarStork/Dashboard/Main";
@@ -83,6 +83,10 @@ const App = () => {
                 <Route
                   path="/services/settings/profile"
                   element={<Profile />}
+                />
+                <Route
+                  path="/services/settings/invoices"
+                  element={<Invoice />}
                 />
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
