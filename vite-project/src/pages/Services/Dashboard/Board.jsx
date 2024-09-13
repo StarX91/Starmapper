@@ -31,8 +31,8 @@ const Board = () => {
               md:text-4xl"
             >
               Welcome to{" "}
-              <span className="font-bold bg-clip-text text-transparent bg-gradient-to-b from-red-600 via-red-600 to-red-800">
-                StarMapper{" "}
+              <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-red-600 to-red-800">
+                StarMapper
               </span>
             </p>
             <p
