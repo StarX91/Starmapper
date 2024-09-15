@@ -204,18 +204,20 @@ const Board = () => {
               <div className="mt-4 w-full bg-neutral-800 h-10">
                 <p className="p-2 text-neutral-400 font-semibold text-center">
                   Your
-                  <span className="text-neutral-800">
+                  <span className="text-neutral-500">
                     {" "}
                     Aerial Intelligence{" "}
                   </span>
                   Platform
                 </p>
               </div>
-              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
-                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
-                  Explore {">"}
-                </button>
-                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+                <Link to="/ss/dashboard">
+                  <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md ">
+                    Explore {">"}
+                  </button>
+                </Link>
+                <button className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1 ">
                   Learn More
                 </button>
               </div>
@@ -224,21 +226,24 @@ const Board = () => {
               <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
                 <img src={logotwo} alt="star stork logo" className="p-3" />
               </div>
+
               <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
                 STAR MARG
               </h1>
               <div className="mt-4 w-full bg-neutral-800 h-10">
                 <p className="p-2 text-neutral-400 font-semibold text-center">
                   Your
-                  <span className="text-neutral-800"> Path To Precision </span>
+                  <span className="text-neutral-500"> Path To Precision </span>
                   Insights
                 </p>
               </div>
-              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
-                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
-                  Explore {">"}
-                </button>
-                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+                <Link to="/sm/dashboard">
+                  <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md ">
+                    Explore {">"}
+                  </button>
+                </Link>
+                <button className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1 ">
                   Learn More
                 </button>
               </div>
@@ -253,15 +258,17 @@ const Board = () => {
               <div className="mt-4 w-full bg-neutral-800 h-10">
                 <p className="p-2 text-neutral-400 font-semibold text-center">
                   Your
-                  <span className="text-neutral-800 "> Mission Control </span>
+                  <span className="text-neutral-500 "> Mission Control </span>
                   Hub
                 </p>
               </div>
-              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
-                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
-                  Explore {">"}
-                </button>
-                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+                <Link to="/dashboard">
+                  <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md ">
+                    Explore {">"}
+                  </button>
+                </Link>
+                <button className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1 ">
                   Learn More
                 </button>
               </div>
