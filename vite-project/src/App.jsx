@@ -19,6 +19,8 @@ import Edits from "./pages/Services/Dashboard/EditProfile";
 import Board from "./pages/Services/Dashboard/Board";
 import Main from "./pages/StarStork/Dashboard/Main";
 import Mmain from "./pages/StarMarg/Dashboard/Mmain";
+import Images from "./pages/StarMarg/CreateProject/Images";
+import UploadImages from "./pages/StarMarg/CreateProject/Images";
 import CreateProject from "./pages/StarMarg/CreateProject/CreateProject";
 import TMain from "./pages/StarStork/Tasks/Tmain";
 import Dmain from "./pages/StarStork/Detectors/Dmain";
@@ -90,6 +92,9 @@ const App = () => {
                 />
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
+                <Route path="/images" element={<Images />} />
+                {/* Define the route for UploadImages */}
+                <Route path="/upload-images" element={<UploadImages />} />
                 <Route
                   path="/create-project"
                   element={<CreateProject />}

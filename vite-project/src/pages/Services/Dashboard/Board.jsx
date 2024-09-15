@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import StarStork from "../../../assets/starstork.svg";
 import Starmarg from "../../../assets/Starmarg.svg";
 import Starexplorer from "../../../assets/starxexplorer.svg";
+import logoone from "../../../assets/Exclude.png";
+import logotwo from "../../../assets/vector.png";
+import logothree from "../../../assets/Group 262.png";
 import Star from "../../../assets/star.svg";
 
 const Board = () => {
@@ -96,8 +99,8 @@ const Board = () => {
               </div>
             ))}
         </div> */}
-          <div
-            className="flex justify-center mt-5
+          {/*<div
+            className="flex   justify-center mt-5
             min-[1440px]:mt-10"
           >
             <div
@@ -105,7 +108,7 @@ const Board = () => {
             2xl:w-5/12"
             >
               <div className="w-24 h-24   mt-1 mx-3">
-                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> */}
+                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> 
                 <img src={Starmarg} className="mt-4 "></img>
               </div>
               <div className=" w-full">
@@ -128,7 +131,7 @@ const Board = () => {
             </div>
           </div>
           <div
-            className="flex justify-center mt-5
+            className="flex  justify-center mt-5
         "
           >
             <div
@@ -136,7 +139,7 @@ const Board = () => {
             2xl:w-5/12"
             >
               <div className="w-24 h-24   mt-1 mx-3">
-                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> */}
+                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> 
                 <img src={Starexplorer} className="mt-4"></img>
               </div>
               <div className=" w-full">
@@ -167,7 +170,7 @@ const Board = () => {
             2xl:w-5/12"
             >
               <div className="w-24 h-24 mt-1 mx-3">
-                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> */}
+                {/* <div className=" w-full h-full aspect-square rounded-full bg-neutral-800"></div> 
                 <img src={StarStork} className="mt-4"></img>
               </div>
               <div className=" w-full">
@@ -186,6 +189,81 @@ const Board = () => {
                     Explore Now
                   </h1>
                 </Link>
+              </div>
+            </div>
+          </div> */}
+
+          <div className="flex justify-center mt-6 gap-20">
+            <div className="lg:w-1/4 border border-neutral-400 h-96 rounded-3xl ">
+              <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
+                <img src={logoone} alt="star stork logo" className="p-3" />
+              </div>
+              <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                STAR STORK
+              </h1>
+              <div className="mt-4 w-full bg-neutral-800 h-10">
+                <p className="p-2 text-neutral-400 font-semibold text-center">
+                  Your
+                  <span className="text-neutral-800">
+                    {" "}
+                    Aerial Intelligence{" "}
+                  </span>
+                  Platform
+                </p>
+              </div>
+              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
+                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
+                  Explore {">"}
+                </button>
+                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+                  Learn More
+                </button>
+              </div>
+            </div>
+            <div className="lg:w-1/4 border border-neutral-400 h-96 rounded-3xl ">
+              <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
+                <img src={logotwo} alt="star stork logo" className="p-3" />
+              </div>
+              <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                STAR MARG
+              </h1>
+              <div className="mt-4 w-full bg-neutral-800 h-10">
+                <p className="p-2 text-neutral-400 font-semibold text-center">
+                  Your
+                  <span className="text-neutral-800"> Path To Precision </span>
+                  Insights
+                </p>
+              </div>
+              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
+                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
+                  Explore {">"}
+                </button>
+                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+                  Learn More
+                </button>
+              </div>
+            </div>
+            <div className="lg:w-1/4 border border-neutral-400 h-96 rounded-3xl ">
+              <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
+                <img src={logothree} alt="star stork logo" className="" />
+              </div>
+              <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                STAR EXPLORER
+              </h1>
+              <div className="mt-4 w-full bg-neutral-800 h-10">
+                <p className="p-2 text-neutral-400 font-semibold text-center">
+                  Your
+                  <span className="text-neutral-800 "> Mission Control </span>
+                  Hub
+                </p>
+              </div>
+              <div className="flex gap-2 p-4 w-full mx-auto my-4 justify-center gap-4">
+                <button className="w-1/2 bg-neutral-400 text-neutral-900  rounded-md ">
+                  Explore {">"}
+                </button>
+                <button className="w-1/2 border border-neutral-400 rounded-md py-1 ">
+                  Learn More
+                </button>
               </div>
             </div>
           </div>

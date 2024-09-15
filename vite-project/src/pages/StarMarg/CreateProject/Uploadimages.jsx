@@ -1,9 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const UploadImages = ({ closePopup }) => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleFinish = () => {
+    // Close the modal and navigate to the Images component
+    navigate("/images");
+  };
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-neutral-900 p-8 rounded-xl max-w-lg w-11/12">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Subtle blurred background */}
+      <div className="absolute inset-0 bg-black bg-opacity-60 "></div>
+
+      {/* Modal content */}
+      <div className="relative bg-neutral-900 p-8 rounded-xl max-w-lg w-11/12 z-50">
         <h2 className="text-2xl text-center text-neutral-300 mb-8">
           Upload Images
         </h2>
@@ -23,7 +34,10 @@ const UploadImages = ({ closePopup }) => {
           >
             Cancel
           </button>
-          <button className="bg-neutral-400 text-neutral-900  p-1 px-6 font-semibold rounded-md">
+          <button
+            className="bg-neutral-400 text-neutral-900  p-1 px-6 font-semibold rounded-md"
+            onClick={handleFinish}
+          >
             Finish
           </button>
         </div>

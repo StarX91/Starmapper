@@ -58,7 +58,11 @@ const Navbartwo = () => {
             <GrServices className="w-12 h-12" /> {/* Increased size */}
             <p className="text-[11px] font-semibold">Services</p>
           </button>
-          <button className=" w-20 h-14 mx-2 my-1 py-1 rounded-md flex flex-col items-center">
+          <button
+            className=" w-20 h-14 mx-2 my-1 py-1 rounded-md flex flex-col items-center"
+            ref={(el) => (buttonsRef.current["star marg"] = el)}
+            onClick={() => handleButtonClick("Star Marg", "/sm/dashboard")}
+          >
             <GiFlatStar className="text-zinc-300 w-20 h-8" />
             <p className="text-zinc-300 text-xs md:text-sm font-bold">
               Star Marg
