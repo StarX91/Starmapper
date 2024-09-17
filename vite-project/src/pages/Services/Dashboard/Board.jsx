@@ -1,23 +1,19 @@
 import React, { useState } from "react";
 import Navbar from "../../../components/ServicesNavbar";
 import { Link } from "react-router-dom";
-import StarStork from "../../../assets/starstork.svg";
-import Starmarg from "../../../assets/Starmarg.svg";
-import Starexplorer from "../../../assets/starxexplorer.svg";
+
 import logoone from "../../../assets/Exclude.png";
 import logotwo from "../../../assets/vector.png";
 import logothree from "../../../assets/Group 262.png";
 import Star from "../../../assets/star.svg";
 
 const Board = () => {
-  // State to track if Learn More is clicked
   const [showMore, setShowMore] = useState({
     starStork: false,
     starMarg: false,
     starExplorer: false,
   });
 
-  // Handler for toggling the Learn More state
   const handleLearnMore = (card) => {
     setShowMore((prevState) => ({
       ...prevState,
@@ -26,55 +22,43 @@ const Board = () => {
   };
 
   return (
-    <div className="bg-black h-screen">
+    <div className="bg-black min-h-screen w-full">
       <Navbar />
-      <div className="flex bg-black  w-full h-fit justify-center">
+      <div className="flex bg-black w-full justify-center">
         <div
-          className="rounded-2xl justify-center
-          w-full  mx-4  mt-8  mb-12 p-4
-           md:mx-18 md:mt-4 md:mb-5
-          min-[1440px]:my-16  min-[1440px]:mx-36"
+          className="rounded-2xl w-full mx-4 mt-8 mb-12 p-4 
+            md:mx-18 md:mt-4 md:mb-5 
+            min-[1440px]:my-16 min-[1440px]:mx-36"
         >
-          <div className="flex justify-center items-center ">
+          <div className="flex justify-center items-center">
             <img src={Star} className="" alt="Star Logo" />
           </div>
-          <div
-            className="text-center text-neutral-300 mt-2
-            min-[1440px]:mt-4
-            2xl:mt-12"
-          >
-            <p className="text-xl font-semibold md:text-4xl">
+          <div className="text-center text-neutral-300 mt-2 md:mt-4 2xl:mt-12">
+            <p className="text-lg font-semibold md:text-4xl">
               Welcome to{" "}
               <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-red-600 to-red-800">
                 StarMapper
               </span>
             </p>
-            <p
-              className="text-xs md:text-sm pt-2 px-36 md:pt-3 text-neutral-300 font-semibold
-              min-[1440px]:pt-4 min-[1440px]:text-lg min-[1440px]:px-56
-              2xl:px-96"
-            >
-              Star-Mapper is a SaaS platform offering multiple services. Each
-              service is uniquely designed with the highest security and
-              simplicity to address the needs of the drone ecosystem
+            <p className="text-xs md:text-sm pt-2 px-6 md:px-36 text-neutral-300 font-semibold min-[1440px]:text-lg min-[1440px]:px-56 2xl:px-96">
+              Star-Mapper is a SaaS platform offering multiple services...
             </p>
           </div>
 
           {/* Cards Section */}
-          <div className="flex justify-center mt-6 gap-20">
+          <div className="flex flex-col lg:flex-row justify-center mt-6 gap-10 lg:gap-20">
             {/* Star Stork Card */}
-            <div className="lg:w-1/4 border border-neutral-400 h-auto rounded-3xl ">
+            <div className="border border-neutral-400 h-auto rounded-3xl  lg:w-1/4">
               {!showMore.starStork ? (
                 <>
-                  {/* Logo and description */}
-                  <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
+                  <div className="rounded-full border border-neutral-400 w-32 h-32 flex mx-auto mt-4 md:mt-10">
                     <img src={logoone} alt="star stork logo" className="p-3" />
                   </div>
-                  <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                  <h1 className="text-center mt-6 font-bold text-neutral-300 text-2xl md:text-3xl">
                     STAR STORK
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-10">
-                    <p className="p-2 text-neutral-400 font-semibold text-center">
+                    <p className="p-2 text-neutral-400 font-semibold text-center text-sm">
                       Your{" "}
                       <span className="text-neutral-500">
                         Aerial Intelligence
@@ -85,32 +69,29 @@ const Board = () => {
                 </>
               ) : (
                 <>
-                  {/* Learn More Content */}
                   <h1 className="text-center mt-8 font-bold text-neutral-300 text-3xl">
                     STAR STORK
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-16 mb-2">
                     <p className="p-1 text-lg text-neutral-400 font-semibold text-center border border-neutral-500">
-                      Revolutionize decision-making<br></br> with StarStork.
+                      Revolutionize decision-making
+                      <br /> with StarStork.
                     </p>
                   </div>
                   <p className="text-neutral-300 text-center mt-4 m-8">
-                    Our advanced software leverages cutting-edge drone imagery
-                    analysis to extract actionable insights. From precision
-                    agriculture to urban planning, StarStork empowers you to
-                    make informed decisions based on accurate, real-time data.
+                    Our advanced software leverages cutting-edge drone
+                    imagery...
                   </p>
                 </>
               )}
-
-              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center">
                 <Link to="/ss/dashboard">
                   <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md">
                     Explore {">"}
                   </button>
                 </Link>
                 <button
-                  className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1"
+                  className="text-neutral-400 border border-neutral-400 rounded-md py-1 px-4"
                   onClick={() => handleLearnMore("starStork")}
                 >
                   {showMore.starStork ? "Less" : "Learn More"}
@@ -119,18 +100,17 @@ const Board = () => {
             </div>
 
             {/* Star Marg Card */}
-            <div className="lg:w-1/4 border border-neutral-400 h-auto rounded-3xl ">
+            <div className="border border-neutral-400 h-auto rounded-3xl  lg:w-1/4">
               {!showMore.starMarg ? (
                 <>
-                  {/* Logo and description */}
-                  <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
+                  <div className="rounded-full border border-neutral-400 w-32 h-32 flex mx-auto mt-4 md:mt-10">
                     <img src={logotwo} alt="star marg logo" className="p-3" />
                   </div>
-                  <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                  <h1 className="text-center mt-6 font-bold text-neutral-300 text-2xl md:text-3xl">
                     STAR MARG
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-10">
-                    <p className="p-2 text-neutral-400 font-semibold text-center">
+                    <p className="p-2 text-neutral-400 font-semibold text-center text-sm">
                       Your{" "}
                       <span className="text-neutral-500">
                         Path to Precision
@@ -141,32 +121,27 @@ const Board = () => {
                 </>
               ) : (
                 <>
-                  {/* Learn More Content */}
                   <h1 className="text-center mt-8 font-bold text-neutral-300 text-3xl">
                     STAR MARG
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-16 mb-2">
                     <p className="p-1 text-lg text-neutral-400 font-semibold text-center border border-neutral-500">
-                      Unleash the power of aerial <br></br> data with StarMarg.
+                      Unleash the power of aerial <br /> data with StarMarg.
                     </p>
                   </div>
                   <p className="text-neutral-300 text-center mt-4 m-8">
-                    Our comprehensive software transforms drone imagery into
-                    stunning orthomosaics, processes multispectral data with
-                    ease, and generates valuable indices-driven maps. StarMarg
-                    is your reliable companion on the path to precision.
+                    Our comprehensive software transforms drone imagery...
                   </p>
                 </>
               )}
-
-              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center">
                 <Link to="/sm/dashboard">
                   <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md">
                     Explore {">"}
                   </button>
                 </Link>
                 <button
-                  className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1"
+                  className="text-neutral-400 border border-neutral-400 rounded-md py-1 px-4"
                   onClick={() => handleLearnMore("starMarg")}
                 >
                   {showMore.starMarg ? "Less" : "Learn More"}
@@ -175,22 +150,17 @@ const Board = () => {
             </div>
 
             {/* Star Explorer Card */}
-            <div className="lg:w-1/4 border border-neutral-400 h-auto rounded-3xl">
+            <div className="border border-neutral-400 h-auto rounded-3xl  lg:w-1/4">
               {!showMore.starExplorer ? (
                 <>
-                  {/* Logo and description */}
-                  <div className="rounded-full border border-neutral-400 w-1/5 flex mx-auto w-32 h-32 mt-10">
-                    <img
-                      src={logothree}
-                      alt="star explorer logo"
-                      className=""
-                    />
+                  <div className="rounded-full border border-neutral-400 w-32 h-32 flex mx-auto mt-4 md:mt-10">
+                    <img src={logothree} alt="star explorer logo" />
                   </div>
-                  <h1 className="text-center mt-8  font-bold text-neutral-300 text-3xl">
+                  <h1 className="text-center mt-6 font-bold text-neutral-300 text-2xl md:text-3xl">
                     STAR EXPLORER
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-10">
-                    <p className="p-2 text-neutral-400 font-semibold text-center">
+                    <p className="p-2 text-neutral-400 font-semibold text-center text-sm">
                       Your{" "}
                       <span className="text-neutral-500">Mission Control</span>{" "}
                       Hub
@@ -199,32 +169,28 @@ const Board = () => {
                 </>
               ) : (
                 <>
-                  {/* Learn More Content */}
                   <h1 className="text-center mt-8 font-bold text-neutral-300 text-3xl">
                     STAR EXPLORER
                   </h1>
                   <div className="mt-4 w-full bg-neutral-800 h-16 mb-2">
                     <p className="p-1 text-lg text-neutral-400 font-semibold text-center border border-neutral-500">
-                      Elevate your drone operations <br></br> with StareXplorer.
+                      Elevate your drone operations <br /> with StareXplorer.
                     </p>
                   </div>
                   <p className="text-neutral-300 text-center mt-4 m-8">
                     Our powerful software seamlessly tracks flights, streams
-                    live video to the cloud, and provides detailed logs for
-                    valuable insights. StareXplorer is your go-to solution for
-                    efficient and effective drone missions.
+                    live video...
                   </p>
                 </>
               )}
-
-              <div className="flex gap-2 p-4 w-full my-4 justify-center gap-4">
+              <div className="flex gap-2 p-4 w-full my-4 justify-center">
                 <Link to="/dashboard">
                   <button className="w-full bg-neutral-400 text-neutral-900 p-1 px-5 rounded-md">
                     Explore {">"}
                   </button>
                 </Link>
                 <button
-                  className="lg:w-1/3 text-neutral-400 border border-neutral-400 rounded-md py-1"
+                  className="text-neutral-400 border border-neutral-400 rounded-md py-1 px-4"
                   onClick={() => handleLearnMore("starExplorer")}
                 >
                   {showMore.starExplorer ? "Less" : "Learn More"}
