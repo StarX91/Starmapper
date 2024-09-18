@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
-import Uploadimages from "./Uploadimages";
+import Uploadimages from "./Modals/Uploadimages";
 
 function CreateImageset() {
   const [popup, setPopup] = useState(false);
