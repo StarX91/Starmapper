@@ -199,6 +199,7 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../Navbar/Navbar"; // Import your existing navbar
 import CreatePlan from "./CreatePlan";
 import Images from "./Images"; // Assuming this is your Images component
+import GoogleMap from "./Map";
 
 const CreateProject = () => {
   const [isNextClicked, setIsNextClicked] = useState(false);
@@ -286,7 +287,7 @@ const CreateProject = () => {
                 Next
               </button>
             </div>
-            <div className="bg-neutral-800 w-full min-h-[350px] mt-6 rounded-3xl"></div>
+            <div className="bg-neutral-800 w-full min-h-[350px] mt-6 rounded-3xl"><GoogleMap/></div>
           </div>
         </>
       )}

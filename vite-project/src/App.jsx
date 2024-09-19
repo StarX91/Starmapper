@@ -41,7 +41,7 @@ import AnnotationTask from "./pages/StarStork/AnnotationReportTask/AnnotationTas
 import TrainingTask from "./pages/StarStork/TrainingTasks/TrainingTask";
 import Setup from "./pages/StarStork/TrainingTasks/SetupPage";
 import Report from "./pages/StarStork/TrainingTasks/Report";
-
+import GoogleMap from "./pages/StarMarg/CreateProject/Map"
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -129,6 +129,7 @@ const App = () => {
                 <Route path="/setup" element={<Setup />} />
                 <Route path="/report" element={<Report />} />
                 {/* <Route path="/verify-otp" element={<VerifyOtp />} /> */}
+                <Route path="/google_map" element={<GoogleMap/>} />
               </Routes>
               {/* </ErrorBoundary> */}
             </Router>

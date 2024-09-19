@@ -14,23 +14,50 @@ function EditProfile() {
   const [tempDateOfBirth, setTempDateOfBirth] = useState(""); // Temporary date of birth state
   const [deleteImageFlag, setDeleteImageFlag] = useState(false); // Flag for image deletion
   const [dropdownVisible, setDropdownVisible] = useState(false); // Dropdown visibility
+  const [profile, setProfile] = useState({
+    username: "",
+    dateOfBirth: "",
+    pilotLicense: "",
+    phoneNumber: "",
+    profileImg: "",
+  });
 
   useEffect(() => {
-    const storedImage = localStorage.getItem("profileImage");
-    if (storedImage) {
-      setImage(storedImage);
-      setTempImage(storedImage);
-    }
+    const fetchUserProfile = async () => {
+      try {
+        const uid = localStorage.getItem("uid");
+        if (!uid) {
+          throw new Error("No user UID found in local storage.");
+        }
 
-    const storedDateOfBirth = localStorage.getItem("dateOfBirth");
-    if (storedDateOfBirth) {
-      setDateOfBirth(storedDateOfBirth);
-      setTempDateOfBirth(storedDateOfBirth);
-    } else {
-      const minDate = calculateMinDate();
-      setDateOfBirth(minDate);
-      setTempDateOfBirth(minDate);
-    }
+        const { data, error } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("uid", uid)
+          .single();
+
+        if (error) {
+          console.error("Error fetching user profile:", error);
+          alert("Failed to fetch user profile. Please try again later.");
+        } else {
+          setProfile({
+            username: data.username || "",
+            dateOfBirth: data.date_of_birth || "",
+            pilotLicense: data.pilot_license || "",
+            phoneNumber: data.phone_number || "",
+            profileImg: data.profile_img || "", // Set profile image from Supabase
+          });
+          setImage(data.profile_img || "");
+          setTempImage(data.profile_img || "");
+          setDateOfBirth(data.date_of_birth || calculateMinDate());
+          setTempDateOfBirth(data.date_of_birth || calculateMinDate());
+        }
+      } catch (error) {
+        console.error("Error getting user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
   }, []);
 
   const handleImageChange = (event) => {
@@ -50,64 +77,78 @@ function EditProfile() {
     setTempDateOfBirth(event.target.value); // Update temporary date of birth state
   };
 
-  const handleSave = () => {
-    if (deleteImageFlag) {
-      setImage(null);
-      localStorage.removeItem("profileImage");
-    } else if (tempImage) {
-      setImage(tempImage);
-      localStorage.setItem("profileImage", tempImage);
+  const handleSave = async () => {
+    const uid = localStorage.getItem("uid");
+    if (!uid) {
+      alert("No user UID found in local storage.");
+      return;
     }
-    setDateOfBirth(tempDateOfBirth);
-    localStorage.setItem("dateOfBirth", tempDateOfBirth);
+
+    if (deleteImageFlag) {
+      // Delete image from Supabase
+      const { data ,error } = await supabase
+        .from("profile")
+        .update({local_img: null })
+        .select("profile_img")
+        .eq("uid", uid);
+
+      if (error) {
+        console.error("Error updating profile image:", error);
+      } else {
+        setImage(data.profile_img);
+        setTempImage(data.profile_img);
+      }
+    } else if (tempImage !== image) {
+      // Upload new image to Supabase
+      const file = dataURLToFile(tempImage, "profile-image.png");
+      const { error: uploadError } = await supabase
+        .storage
+        .from("profile-pictures")
+        .upload(`public/${uid}/profile-image.png`, file);
+
+      if (uploadError) {
+        console.error("Error uploading profile image:", uploadError);
+      } else {
+        const { publicURL, error: urlError } = supabase
+          .storage
+          .from("profile-pictures")
+          .getPublicUrl(`public/${uid}/profile-image.png`);
+
+        if (urlError) {
+          console.error("Error getting profile image URL:", urlError);
+        } else {
+          // Update profile image URL in Supabase
+          const { error: updateError } = await supabase
+            .from("profile-pictures")
+            .update({ local_img: publicURL })
+            .eq("uid", uid);
+
+          if (updateError) {
+            console.error("Error updating profile image URL:", updateError);
+          } else {
+            setImage(publicURL);
+          }
+        }
+      }
+    }
+
+    // Update other profile information
+    const { error: updateError } = await supabase
+      .from("profile")
+      .update({
+        date_of_birth: tempDateOfBirth,
+      })
+      .eq("uid", uid);
+
+    if (updateError) {
+      console.error("Error updating profile information:", updateError);
+    }
   };
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = async () => {
     setTempImage(null); // Clear the temporary image
     setDeleteImageFlag(true); // Set the delete flag to true
   };
-
-  const [profile, setProfile] = useState({
-    username: "",
-    dateOfBirth: "",
-    pilotLicense: "",
-    phoneNumber: "",
-    profileImg: "",
-  });
-
-  const fetchUserProfile = async () => {
-    try {
-      const uid = localStorage.getItem("uid");
-      if (!uid) {
-        throw new Error("No user UID found in local storage.");
-      }
-
-      const { data, error } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("uid", uid)
-        .single();
-
-      if (error) {
-        console.error("Error fetching user profile:", error);
-        alert("Failed to fetch user profile. Please try again later.");
-      } else {
-        setProfile({
-          username: data.username || "",
-          dateOfBirth: data.date_of_birth || "",
-          pilotLicense: data.pilot_license || "",
-          phoneNumber: data.phone_number || "",
-          profileImg: data.profile_img || "",
-        });
-      }
-    } catch (error) {
-      console.error("Error getting user profile:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
 
   const back = () => {
     navigate("/ss/dashboard");
@@ -123,6 +164,18 @@ function EditProfile() {
     return minDate.toISOString().split("T")[0];
   };
 
+  // Convert data URL to File object
+  const dataURLToFile = (dataURL, filename) => {
+    const [header, data] = dataURL.split(',');
+    const mime = header.match(/:(.*?);/)[1];
+    const binary = atob(data);
+    const array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    return new File([new Uint8Array(array)], filename, { type: mime });
+  };
+
   return (
     <div className="w-full min-h-screen bg-black">
       <Navbar />
@@ -132,6 +185,12 @@ function EditProfile() {
             {tempImage ? (
               <img
                 src={tempImage}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover"
+              />
+            ) : image ? (
+              <img
+                src={image}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover"
               />
@@ -178,7 +237,7 @@ function EditProfile() {
             <div className="font-semibold text-sm">Name</div>
             <input
               readOnly
-              placeholder="Atharv Malve"
+              placeholder={profile.username}
               className="w-full bg-transparent text-sm font-semibold placeholder-neutral-500"
             />
           </div>
@@ -198,7 +257,7 @@ function EditProfile() {
                 <h1 className="font-semibold text-sm">Phone Number</h1>
                 <input
                   readOnly
-                  placeholder="892392129"
+                  placeholder={profile.phoneNumber}
                   className="w-full bg-transparent text-sm font-semibold text-neutral-500"
                 />
               </div>
