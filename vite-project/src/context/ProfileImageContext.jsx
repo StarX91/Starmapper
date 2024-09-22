@@ -21,7 +21,7 @@ export const ProfileProvider = ({ children }) => {
   };
 
   return (
-    <ProfileContext.Provider value={{ image, updateImage }}>
+    <ProfileContext.Provider value={{ image, setImage }}>
       {children}
     </ProfileContext.Provider>
   );

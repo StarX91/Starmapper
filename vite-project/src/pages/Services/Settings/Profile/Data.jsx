@@ -77,13 +77,54 @@ const Data = () => {
 
 export default Data; */
 
-import React from "react";
+import React,{useState,useEffect} from "react";
+import axios from "axios";
+import { useProfile } from "../../../../context/ProfileImageContext";
 
 const Data = () => {
+  const [profile, setProfile] = useState({
+    username: "",
+    dateOfBirth: "",
+    pilotLicense: "",
+    phoneNumber: "",
+    profileImg: "",
+  });
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const uid = localStorage.getItem("uid");
+        if (!uid) {
+          throw new Error("No user UID found in local storage.");
+        }
+
+        const response = await axios.get(`http://localhost:5000/api/google_login/${uid}`);
+        const data = response.data;
+        console.log(data);
+
+        setProfile({
+          username: data.username || "",
+          profileImg: data.profile_img || "",
+          email: data.email || ""
+        });
+        localStorage.setItem('profileImage',profile.profileImg);
+      } catch (error) {
+        console.error("Error getting user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
   return (
     <div className="bg-neutral-900 text-white w-full p-4 lg:p-8 flex flex-col items-center">
       <div className="flex flex-col items-center">
-        <div className="w-20 h-20 bg-neutral-700 rounded-full mb-4"></div>
+        <div className="w-20 h-20 bg-neutral-700 rounded-full mb-4">
+          <img
+            src={profile.profileImg}
+            alt="Profile"
+            className="w-full h-full rounded-full object-cover"
+          />
+        </div>
         <button className="text-zinc-300 text-xs lg:text-sm -mt-2">
           Change profile picture
         </button>
@@ -96,7 +137,11 @@ const Data = () => {
           <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <div className="bg-neutral-800 py-2 px-3 w-full sm:w-1/2 rounded-md text-center">
               <div className="font-semibold">Name</div>
-              <p className="text-zinc-400 font-semibold">xyz</p>
+              <input 
+                  readOnly
+                  placeholder={profile.username}
+                  className="w-full bg-transparent text-zinc-400 font-semibold"
+              />
             </div>
             <div className="bg-neutral-800 py-2 px-3 w-full sm:w-1/2 rounded-md text-center">
               <div className="font-semibold">Date of Birth</div>
@@ -106,7 +151,11 @@ const Data = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="bg-neutral-800 py-2 px-3 w-full sm:w-1/2 rounded-md text-center">
               <div className="font-semibold">Email Id</div>
-              <p className="text-zinc-400 font-semibold">xyz@gmail.com</p>
+              <input
+                  readOnly
+                  placeholder={profile.email}
+                  className="w-full bg-transparent text-zinc-400 font-semibold"
+              />
             </div>
             <div className="bg-neutral-800 py-2 px-3 w-full sm:w-1/2 rounded-md text-center">
               <div className="font-semibold">Mobile Number</div>
