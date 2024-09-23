@@ -6,14 +6,14 @@ import appleIcon from '../../components/assets/apple.png';
 import googleIcon from '../../components/assets/google.png';
 import bck from "../../components/assets/bck.jpg";
 import starx91 from '../../components/assets/starx91.jpg';
-import { ProfileContext } from '../../context/ProfileContext.jsx';
+//import { ProfileContext } from '../../context/ProfileContext.jsx';
 import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, sendEmailVerification } from '../../components/firebaseConfig.jsx';
 import axios from 'axios'; // Import axios for making HTTP requests
 import bcrypt from 'bcryptjs'; // Import bcryptjs for password hashing
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setProfileImg } = useContext(ProfileContext);
+  //const { setProfileImg } = useContext(ProfileContext);
   const [verificationMessage, setVerificationMessage] = useState('');
 
   const signInWithGoogle = async () => {
@@ -36,10 +36,10 @@ const Register = () => {
 
       if (response.status === 200) {
         // User already exists, navigate to the services page
-        localStorage.setItem("profileImage",response.profileImg);
         navigate('/services');
       } else {
         // Handle any additional logic if needed
+        navigate('/services');
       }
     } catch (error) {
       console.error('Error during sign-in with Google: ', error);
@@ -53,28 +53,24 @@ const Register = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const { username, email, password } = values;
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-
+  
       // Send email verification
       await sendEmailVerification(user);
-      console.log("Verification email sent to:", email);
       setVerificationMessage(`A verification email has been sent to ${email}. Please check your inbox.`);
-
-      // Save user details to MongoDB
+  
+      // Save user details to MongoDB (password not hashed here)
       await axios.post('http://localhost:5000/register', {
         uid: user.uid,
         username,
         email,
-        password: hashedPassword,
-        profile_img: user.photoURL // Optionally store the profile image
+        profile_img: user.photoURL, // Optionally store the profile image
+        password // Send the password to be hashed on the server
       });
-
+  
       // Redirect to the login page with a message to verify email
       navigate('/login', { state: { emailSent: true, email } });
     } catch (error) {
@@ -84,6 +80,7 @@ const Register = () => {
       setSubmitting(false);
     }
   };
+  
 
   return (
     <div className='bg-black h-full sm:w-screen sm:h-screen lg:h-screen lg:w-screen'>

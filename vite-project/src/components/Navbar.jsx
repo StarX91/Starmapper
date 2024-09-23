@@ -15,6 +15,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { image } = useProfile();
   const { profileImg } = useContext(ProfileContext);
+  console.log(image);
 
   const handleLogout = () => {
     // Add your logout logic here
@@ -77,6 +78,8 @@ const Navbar = () => {
           </button>
         </div>
         <div className="relative">
+          
+        <img src={image} alt="" />
           <button
             className="w-8 h-8 p-6 m-4 rounded-full bg-zinc-700 focus:outline-none"
             onClick={() => setDropdownOpen(!dropdownOpen)}

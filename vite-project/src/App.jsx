@@ -68,7 +68,6 @@ const App = () => {
   return (
     <div className="w-full h-full bg-black">
       <ThemeProvider>
-        <ProfileContext.Provider value={{ profileImg, setProfileImg }}>
           <ProfileProvider>
             <Router>
               {/* <ErrorBoundary> */}
@@ -134,7 +133,6 @@ const App = () => {
               {/* </ErrorBoundary> */}
             </Router>
           </ProfileProvider>
-        </ProfileContext.Provider>
       </ThemeProvider>
     </div>
   );

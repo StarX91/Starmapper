@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/ServicesNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {useProfile} from "../../../context/ProfileImageContext"
 import { IoIosArrowForward } from "react-icons/io";
 
 function EditProfile() {
   const navigate = useNavigate();
+  const {setImage} = useProfile();
   const [tempDateOfBirth, setTempDateOfBirth] = useState("");
   const [profile, setProfile] = useState({
     username: "",
@@ -36,7 +38,7 @@ function EditProfile() {
         });
         setTempDateOfBirth(data.dateOfBirth || calculateMinDate());
         console.log(profile.profileImg);
-        localStorage.setItem('profileImage',profile.profileImg);
+        setImage(profile.profileImg);
       } catch (error) {
         console.error("Error getting user profile:", error);
       }
@@ -89,13 +91,7 @@ function EditProfile() {
       <div className="h-[calc(100%-48px)] w-full p-4 flex flex-col items-center justify-center">
         <div className="flex justify-center mb-4">
           <div className="relative">
-            {profile.profileImg ? (
               <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
-            ) : (
-              <div className="w-32 h-32 bg-neutral-900 rounded-full flex items-center justify-center">
-                <span className="text-neutral-500">No Image</span>
-              </div>
-            )}
           </div>
         </div>
         <form className="w-full max-w-md">

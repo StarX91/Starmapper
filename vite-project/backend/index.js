@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const User = require('./models/User'); // Ensure this path is correct
+const User = require('./models/google_login'); // Ensure this path is correct
+const Register = require('./models/register');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
@@ -24,11 +25,23 @@ mongoose.connect('mongodb+srv://starx91:Starx9119@starx91.ol9uz.mongodb.net/Star
     .catch(err => console.log(err));
 
 // Endpoint to register a new user
+// Endpoint to register a new user
 app.post('/register', async (req, res) => {
-    const { uid, username, email, profile_img } = req.body;
+    const { uid, username, email, password, profile_img } = req.body;
 
     try {
-        const newUser = new User({ uid, username, email, profile_img });
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create a new user using the schema
+        const newUser = new Register({
+            uid,
+            username,
+            email,
+            profile_img,
+            password: hashedPassword // Save the hashed password
+        });
+
         await newUser.save();
         res.status(200).send('User registered successfully');
     } catch (error) {
@@ -36,6 +49,8 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Error saving user');
     }
 });
+
+
 
 // Endpoint to handle Google sign-in
 app.post('/google-signin', async (req, res) => {
