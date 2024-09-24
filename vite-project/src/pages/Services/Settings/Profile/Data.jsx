@@ -79,9 +79,8 @@ export default Data; */
 
 import React,{useState,useEffect} from "react";
 import axios from "axios";
-import { useProfile } from "../../../../context/ProfileImageContext";
-
 const Data = () => {
+
   const [profile, setProfile] = useState({
     username: "",
     dateOfBirth: "",
@@ -100,14 +99,12 @@ const Data = () => {
 
         const response = await axios.get(`http://localhost:5000/api/google_login/${uid}`);
         const data = response.data;
-        console.log(data);
 
         setProfile({
           username: data.username || "",
           profileImg: data.profile_img || "",
           email: data.email || ""
         });
-        localStorage.setItem('profileImage',profile.profileImg);
       } catch (error) {
         console.error("Error getting user profile:", error);
       }
