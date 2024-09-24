@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@heroicons/react": "^2.1.5",
     "@react-google-maps/api": "^2.19.3",
     "@supabase/supabase-js": "^2.44.3",
     "axios": "^1.7.2",
@@ -24,6 +26,7 @@
     "firebaseui": "^6.1.0",
     "formik": "^2.4.6",
     "gapi-script": "^1.2.0",
+    "heroicons": "^2.1.5",
     "i": "^0.3.7",
     "mongodb": "^6.9.0",
     "mongoose": "^8.6.3",

@@ -41,6 +41,8 @@ import AnnotationTask from "./pages/StarStork/AnnotationReportTask/AnnotationTas
 import TrainingTask from "./pages/StarStork/TrainingTasks/TrainingTask";
 import Setup from "./pages/StarStork/TrainingTasks/SetupPage";
 import Report from "./pages/StarStork/TrainingTasks/Report";
+import Plans from "./pages/StarMarg/CreateProject/Plan";
+import Taskss from "./pages/StarMarg/Dashboard/Tasks";
 import GoogleMap from "./pages/StarMarg/CreateProject/Map"
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
@@ -118,6 +120,8 @@ const App = () => {
                   path="/ss/art/annotation-setup"
                   element={<Annotation />}
                 />
+                  <Route path="/tasks" element={<Taskss />} />
+                  <Route path="/plans" element={<Plans />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/edit-profile" element={<EditProfile />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
