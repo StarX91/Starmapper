@@ -5,7 +5,6 @@ import Starx from "../assets/Group 101.svg";
 import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosAddCircle } from "react-icons/io";
 import { useProfile } from "../context/ProfileImageContext";
-import { ProfileContext } from "../context/ProfileContext";
 import { GrServices } from "react-icons/gr";
 import { GiFlatStar } from "react-icons/gi";
 import { TfiHelpAlt } from "react-icons/tfi";
@@ -14,7 +13,6 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { image } = useProfile();
-  const { profileImg } = useContext(ProfileContext);
   console.log(image);
 
   const handleLogout = () => {
@@ -90,10 +88,8 @@ const Navbar = () => {
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            ) : profileImg ? (
-              <div className="text-white">{profileImg}</div>
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0"></span>
+              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0">No image</span>
             )}
           </button>
           {dropdownOpen && (

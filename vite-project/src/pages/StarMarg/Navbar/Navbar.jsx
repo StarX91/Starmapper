@@ -138,7 +138,6 @@ export default Navbar;
 import React, { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../../context/ProfileImageContext";
-import { ProfileContext } from "../../../context/ProfileContext";
 import Starx from "../../../assets/Group 101.svg";
 import { GiFlatStar } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -152,7 +151,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { image } = useProfile();
   const buttonsRef = useRef({});
-  const { profileImg } = useContext(ProfileContext);
 
   const handleLogout = () => {
     // Add your logout logic here
@@ -233,10 +231,8 @@ const Navbar = () => {
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            ) : profileImg ? (
-              <div className="text-white">{profileImg}</div>
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0"></span>
+              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0">No image</span>
             )}
           </button>
           {dropdownOpen && (

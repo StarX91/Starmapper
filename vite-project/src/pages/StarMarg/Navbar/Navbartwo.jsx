@@ -106,10 +106,8 @@ const Navbartwo = () => {
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            ) : profileImg ? (
-              <div className="text-white">{profileImg}</div>
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0"></span>
+              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0">No image</span>
             )}
           </button>
           {dropdownOpen && (
