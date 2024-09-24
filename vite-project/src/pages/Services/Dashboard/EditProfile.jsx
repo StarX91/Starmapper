@@ -37,8 +37,6 @@ function EditProfile() {
           profileImg: data.profile_img || "",
         });
         setTempDateOfBirth(data.dateOfBirth || calculateMinDate());
-        console.log(profile.profileImg);
-        setImage(profile.profileImg);
       } catch (error) {
         console.error("Error getting user profile:", error);
       }

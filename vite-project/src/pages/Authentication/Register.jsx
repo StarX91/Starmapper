@@ -10,9 +10,10 @@ import starx91 from '../../components/assets/starx91.jpg';
 import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, sendEmailVerification } from '../../components/firebaseConfig.jsx';
 import axios from 'axios'; // Import axios for making HTTP requests
 import bcrypt from 'bcryptjs'; // Import bcryptjs for password hashing
-
+import {useProfile} from '../../context/ProfileImageContext.jsx'
 const Register = () => {
   const navigate = useNavigate();
+  const { setImage } = useProfile();
   //const { setProfileImg } = useContext(ProfileContext);
   const [verificationMessage, setVerificationMessage] = useState('');
 
@@ -33,11 +34,14 @@ const Register = () => {
         email: user.email,
         profile_img: profileImgUrl
       });
-
       if (response.status === 200) {
+        console.log(profileImgUrl);
+        setImage(profileImgUrl);
         // User already exists, navigate to the services page
         navigate('/services');
       } else {
+        console.log(profileImgUrl)
+        setImage(profileImgUrl);
         // Handle any additional logic if needed
         navigate('/services');
       }
