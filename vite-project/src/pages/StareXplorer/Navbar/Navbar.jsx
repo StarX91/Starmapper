@@ -3,7 +3,7 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { FaVectorSquare } from "react-icons/fa6";
 import { FaUndo, FaRedo } from "react-icons/fa";
 import { TbRouteSquare } from "react-icons/tb";
-import { ProfileContext } from "../../../context/ProfileContext";
+import { useProfile } from "../../../context/ProfileImageContext"
 
 import { useGoogleLogout } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { profileImg } = useContext(ProfileContext);
+  const { image } = useProfile();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -178,8 +178,8 @@ const Navbar = () => {
               ? 'text-zinc-500 bg-zinc-700 hover:text-zinc-400 hover:bg-zinc-600' 
               : 'text-zinc-500 bg-zinc-300 hover:text-zinc-600 hover:bg-zinc-400'}`}>
               {/* <div className="flex items-center space-x-2"> */}
-                {profileImg ? (
-                  <img src={profileImg} alt="Profile Picture" className="w-8 h-8 rounded-full py-0 px-0 " />
+                {image ? (
+                  <img src={image} alt="Profile Picture" className="w-8 h-8 rounded-full py-0 px-0 " />
                 ): (<div className="py-3 px-3 lg:px-4 lg:py-4"/> )}  
               {/* </div> */}
           </button>
