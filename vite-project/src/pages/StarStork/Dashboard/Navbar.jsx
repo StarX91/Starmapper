@@ -138,18 +138,17 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../../context/ProfileImageContext";
-import { ProfileContext } from "../../../context/ProfileContext";
 import Starx from "../../../assets/Group 101.svg";
 import { GiFlatStar } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosAddCircle } from "react-icons/io";
 import { GrServices } from "react-icons/gr";
+import { FaCircle } from "react-icons/fa6";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { image } = useProfile();
-  const { profileImg } = useContext(ProfileContext);
 
   const handleLogout = () => {
     // Add your logout logic here

@@ -7,6 +7,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import { useProfile } from "../context/ProfileImageContext";
 import { GrServices } from "react-icons/gr";
 import { GiFlatStar } from "react-icons/gi";
+import { FaCircle } from "react-icons/fa6";
 import { TfiHelpAlt } from "react-icons/tfi";
 
 const Navbar = () => {
