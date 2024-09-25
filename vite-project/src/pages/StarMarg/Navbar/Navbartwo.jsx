@@ -1,7 +1,6 @@
 import React, { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../../context/ProfileImageContext";
-import { ProfileContext } from "../../../context/ProfileContext";
 import Starx from "../../../assets/Group 101.svg";
 import { GiFlatStar } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -10,6 +9,7 @@ import { GrServices } from "react-icons/gr";
 import { IoIosHelpCircle } from "react-icons/io";
 import { FaFolder } from "react-icons/fa";
 import { IoImageSharp } from "react-icons/io5";
+import { FaCircle } from "react-icons/fa6";
 
 const Navbartwo = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,7 +17,6 @@ const Navbartwo = () => {
   const navigate = useNavigate();
   const { image } = useProfile();
   const buttonsRef = useRef({});
-  const { profileImg } = useContext(ProfileContext);
 
   const handleLogout = () => {
     // Add your logout logic here
@@ -96,8 +95,8 @@ const Navbartwo = () => {
 
         {/* Profile Section */}
         <div className="relative">
-          <button
-            className="w-8 h-8 p-6 m-4 rounded-full bg-zinc-700 focus:outline-none"
+        <button
+            className="w-12 h-12 m-4 mr-8 rounded-full bg-black focus:outline-none"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             {image ? (
@@ -107,7 +106,9 @@ const Navbartwo = () => {
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0">No image</span>
+              <span className="text-5xl rounded-full  md:my-0 mx-auto md:mx-0 text-neutral-800">
+                <FaCircle />
+              </span>
             )}
           </button>
           {dropdownOpen && (
