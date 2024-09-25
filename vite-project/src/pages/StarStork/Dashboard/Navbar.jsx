@@ -208,8 +208,8 @@ const Navbar = () => {
         {/* Profile Section */}
         {/*<button className="flex bg-zinc-700 w-12 h-12 rounded-full my-4 md:my-0 mx-auto md:mx-0"></button> */}
         <div className="relative">
-          <button
-            className="w-8 h-8 p-6 m-4 rounded-full bg-zinc-700 focus:outline-none"
+        <button
+            className="w-12 h-12 m-4 mr-8 rounded-full bg-black focus:outline-none"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             {image ? (
@@ -218,10 +218,10 @@ const Navbar = () => {
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            ) : profileImg ? (
-              <div className="text-white">{profileImg}</div>
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0"></span>
+              <span className="text-5xl rounded-full  md:my-0 mx-auto md:mx-0 text-neutral-800">
+                <FaCircle />
+              </span>
             )}
           </button>
           {dropdownOpen && (

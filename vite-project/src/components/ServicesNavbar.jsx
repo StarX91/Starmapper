@@ -129,8 +129,8 @@ const Navbar = () => {
           </button>
         </div>
         <div className="relative">
-          <button
-            className="w-8 h-8 m-4 mr-8 rounded-full bg-black focus:outline-none"
+        <button
+            className="w-12 h-12 m-4 mr-8 rounded-full bg-black focus:outline-none"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             {image ? (

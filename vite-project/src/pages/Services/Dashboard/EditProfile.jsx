@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/ServicesNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FiEdit } from "react-icons/fi";
 import {useProfile} from "../../../context/ProfileImageContext"
 import { IoIosArrowForward } from "react-icons/io";
 
 function EditProfile() {
   const navigate = useNavigate();
   const {setImage} = useProfile();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [tempDateOfBirth, setTempDateOfBirth] = useState("");
   const [profile, setProfile] = useState({
     username: "",
@@ -90,6 +92,32 @@ function EditProfile() {
         <div className="flex justify-center mb-4">
           <div className="relative">
               <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
+              <div className="absolute bottom-0 right-0">
+              <button
+                onClick={() => setDropdownVisible(!dropdownVisible)}
+                className="bg-neutral-900 p-1 rounded-full shadow-md"
+              >
+              <FiEdit className="size-5 text-neutral-600" />
+              </button>
+              {dropdownVisible && (
+                <div className="absolute right-0 mt-2 w-40 bg-neutral-900 rounded-md shadow-lg z-10">
+                  <label className="block text-left text-neutral-700 font-semibold p-2 hover:bg-neutral-950 cursor-pointer">
+                    Upload Picture
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                    />
+                  </label>
+                  <button
+                    className="block text-left p-2 w-full text-neutral-700 font-semibold hover:bg-neutral-950 cursor-pointer"
+                  >
+                    {/* <MdOutlineDelete className="inline ml-2 text-red-900"/> */}
+                    Delete Picture
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <form className="w-full max-w-md">

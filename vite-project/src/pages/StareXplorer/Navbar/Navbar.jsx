@@ -177,11 +177,11 @@ const Navbar = () => {
             card ${theme === 'Dark' 
               ? 'text-zinc-500 bg-zinc-700 hover:text-zinc-400 hover:bg-zinc-600' 
               : 'text-zinc-500 bg-zinc-300 hover:text-zinc-600 hover:bg-zinc-400'}`}>
-              {/* <div className="flex items-center space-x-2"> */}
+              <div className="flex items-center space-x-2">
                 {image ? (
                   <img src={image} alt="Profile Picture" className="w-8 h-8 rounded-full py-0 px-0 " />
                 ): (<div className="py-3 px-3 lg:px-4 lg:py-4"/> )}  
-              {/* </div> */}
+              </div>
           </button>
           {isDropdownOpen && (
             <div ref={dropdownRef} 

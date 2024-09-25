@@ -144,6 +144,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosAddCircle } from "react-icons/io";
 import { GrServices } from "react-icons/gr";
 import { IoIosHelpCircle } from "react-icons/io";
+import { FaCircle } from "react-icons/fa6";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -222,7 +223,7 @@ const Navbar = () => {
         {/* Profile Section */}
         <div className="relative">
           <button
-            className="w-8 h-8 p-6 m-4 rounded-full bg-zinc-700 focus:outline-none"
+            className="w-12 h-12 m-4 mr-8 rounded-full bg-black focus:outline-none"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             {image ? (
@@ -232,7 +233,9 @@ const Navbar = () => {
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              <span className=" w-12 h-12  rounded-full my-4 md:my-0 mx-auto md:mx-0">No image</span>
+              <span className="text-5xl rounded-full  md:my-0 mx-auto md:mx-0 text-neutral-800">
+                <FaCircle />
+              </span>
             )}
           </button>
           {dropdownOpen && (
