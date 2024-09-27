@@ -43,7 +43,9 @@ import Setup from "./pages/StarStork/TrainingTasks/SetupPage";
 import Report from "./pages/StarStork/TrainingTasks/Report";
 import Plans from "./pages/StarMarg/CreateProject/Plan";
 import Taskss from "./pages/StarMarg/Dashboard/Tasks";
+import Projects from "./pages/StarMarg/CreateProject/Projects";
 import GoogleMap from "./pages/StarMarg/CreateProject/Map"
+import MapMode from "./pages/StarMarg/CreateProject/MapMode";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -122,6 +124,8 @@ const App = () => {
                 />
                   <Route path="/tasks" element={<Taskss />} />
                   <Route path="/plans" element={<Plans />} />
+                  <Route path="/projects" element={<Projects />}/>
+                  <Route path="/mapMode" element={<MapMode />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/edit-profile" element={<EditProfile />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
