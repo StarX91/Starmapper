@@ -23,26 +23,42 @@ const Register = () => {
       const user = result.user;
       const profileImgUrl = user.photoURL;
       const username = user.displayName || '';
-
-      // Store uid in local storage
-      localStorage.setItem('uid', user.uid);
-
-      // Send user data to your backend for storage
-      const response = await axios.post('http://localhost:5000/google-signin', {
-        uid: user.uid,
-        username: username,
-        email: user.email,
-        profile_img: profileImgUrl
+  
+      // Step 1: Check if the user already exists in MongoDB
+      const userExistsResponse = await axios.get('http://localhost:5000/check-user', {
+        params: { email: user.email }
       });
-      if (response.status === 200) {
-        console.log(profileImgUrl);
-        setImage(profileImgUrl);
-        // User already exists, navigate to the services page
+  
+      if (userExistsResponse.data.exists) {
+        // Step 2: If the user exists, retrieve the user info
+        const existingUser = userExistsResponse.data.user;
+  
+        // Store the user's profile image or any other info
+        if(existingUser.image){
+          setImage(`data:image/jpeg;base64,${existingUser.image}`);
+        }
+        else
+        {
+          setImage(existingUser.profile_img);
+        }
+        localStorage.setItem('uid', existingUser.uid);
+        
+        // Redirect to services page or wherever needed
         navigate('/services');
       } else {
-        console.log(profileImgUrl)
+        // Step 3: If the user doesn't exist, create a new user in MongoDB
+        await axios.post('http://localhost:5000/google-signin', {
+          uid: user.uid,
+          username: username,
+          email: user.email,
+          profile_img: profileImgUrl,
+        });
+  
+        // Store the new user's profile image
         setImage(profileImgUrl);
-        // Handle any additional logic if needed
+        localStorage.setItem('uid', user.uid);
+  
+        // Redirect to services page
         navigate('/services');
       }
     } catch (error) {
@@ -50,6 +66,7 @@ const Register = () => {
       // Handle errors and provide feedback to the user
     }
   };
+  
 
   const handleAppleSignIn = async () => {
     // Existing Apple sign-in logic...

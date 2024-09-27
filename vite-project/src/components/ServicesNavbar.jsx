@@ -20,6 +20,7 @@ const Navbar = () => {
   const buttonsRef = useRef({});
   const { image } = useProfile();
 
+
   useEffect(() => {
     // Move the square to the active button's position after the first render
     moveSquareToActiveButton();

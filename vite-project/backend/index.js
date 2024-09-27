@@ -9,7 +9,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' })); // Adjust the limit as needed
 
 const cors = require('cors');
 app.use(cors({
@@ -54,7 +54,7 @@ app.post('/register', async (req, res) => {
 
 // Endpoint to handle Google sign-in
 app.post('/google-signin', async (req, res) => {
-    const { uid, username, email, profile_img } = req.body;
+    const { uid, username, email, profile_img, image } = req.body;
 
     try {
         // Check if the user already exists
@@ -64,7 +64,7 @@ app.post('/google-signin', async (req, res) => {
         }
 
         // Create new user
-        const newUser = new User({ uid, username, email, profile_img });
+        const newUser = new User({ uid, username, email, profile_img ,image});
         await newUser.save();
         res.status(201).send('User registered successfully');
     } catch (error) {
@@ -89,28 +89,49 @@ app.get('/api/google_login/:uid', async (req, res) => {
     }
 });
 
+// Check if user exists by email
+app.get('/check-user', async (req, res) => {
+    const { email } = req.query;
+  
+    try {
+      const user = await User.findOne({ email });
+      
+      if (user) {
+        return res.status(200).json({ exists: true, user });
+      } else {
+        return res.status(200).json({ exists: false });
+      }
+    } catch (error) {
+      console.error('Error checking if user exists:', error);
+      res.status(500).send('Server error');
+    }
+  });
+  
 // Endpoint to update user profile
-app.put('/api/google_login/:uid', async (req, res) => {
+// Endpoint to update user profile image
+app.post('/api/google_login/:uid', async (req, res) => {
     const { uid } = req.params;
-    const { dateOfBirth } = req.body;
+    const { image } = req.body;
 
     try {
+        // Find user by UID and update the image field
         const updatedUser = await User.findOneAndUpdate(
-            { uid },
-            { dateOfBirth },
-            { new: true }
+            { uid }, // Find user by UID
+            { image: image }, // Update the image field with the new Base64 image
+            { new: true } // Return the updated document
         );
 
         if (!updatedUser) {
             return res.status(404).send('User not found');
         }
 
-        res.status(200).send('User profile updated successfully');
+        res.status(200).send('User image updated successfully');
     } catch (error) {
-        console.error('Error updating user profile:', error);
-        res.status(500).send('Error updating user profile');
+        console.error('Error updating user image:', error);
+        res.status(500).send('Error updating user image');
     }
 });
+
 
 // Endpoint to delete user image (placeholder)
 app.put('/api/google_login/:uid/delete-image', async (req, res) => {
@@ -120,6 +141,7 @@ app.put('/api/google_login/:uid/delete-image', async (req, res) => {
         const updatedUser = await User.findOneAndUpdate(
             { uid },
             { profile_img: null },
+            { image : null},
             { new: true }
         );
 
@@ -139,12 +161,12 @@ app.post('/api/google_login/:uid/upload-image', async (req, res) => {
     const { uid } = req.params;
 
     // Assume image upload logic here, returning a sample URL
-    const imageUrl = 'http://example.com/your-image-url.png'; // Replace with actual upload logic
+    const { image } = req.body;
 
     try {
         const updatedUser = await User.findOneAndUpdate(
             { uid },
-            { profile_img: imageUrl },
+            { image : image },
             { new: true }
         );
 

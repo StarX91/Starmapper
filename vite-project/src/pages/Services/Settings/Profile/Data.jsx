@@ -103,7 +103,8 @@ const Data = () => {
         setProfile({
           username: data.username || "",
           profileImg: data.profile_img || "",
-          email: data.email || ""
+          email: data.email || "",
+          image: data.image || ""
         });
       } catch (error) {
         console.error("Error getting user profile:", error);
@@ -116,11 +117,15 @@ const Data = () => {
     <div className="bg-neutral-900 text-white w-full p-4 lg:p-8 flex flex-col items-center">
       <div className="flex flex-col items-center">
         <div className="w-20 h-20 bg-neutral-700 rounded-full mb-4">
-          <img
-            src={profile.profileImg}
+          {profile.image ? <img
+            src={`data:image/jpeg;base64,${profile.image}`}
             alt="Profile"
             className="w-full h-full rounded-full object-cover"
-          />
+          /> : <img
+          src={profile.profileImg}
+          alt="Profile"
+          className="w-full h-full rounded-full object-cover"
+        />}
         </div>
         <button className="text-zinc-300 text-xs lg:text-sm -mt-2">
           Change profile picture

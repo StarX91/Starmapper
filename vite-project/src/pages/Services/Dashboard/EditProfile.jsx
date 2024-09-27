@@ -9,6 +9,9 @@ import { IoIosArrowForward } from "react-icons/io";
 function EditProfile() {
   const navigate = useNavigate();
   const {setImage} = useProfile();
+  const {image} = useProfile();
+  const [preview, setPreview] = useState(null);
+  const [encodedImage, setEncodedImage] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [tempDateOfBirth, setTempDateOfBirth] = useState("");
   const [profile, setProfile] = useState({
@@ -17,6 +20,7 @@ function EditProfile() {
     pilotLicense: "",
     phoneNumber: "",
     profileImg: "",
+    image:"",
   });
 
   useEffect(() => {
@@ -37,6 +41,7 @@ function EditProfile() {
           pilotLicense: data.pilotLicense || "",
           phoneNumber: data.phoneNumber || "",
           profileImg: data.profile_img || "",
+          image: data.image|| "",
         });
         setTempDateOfBirth(data.dateOfBirth || calculateMinDate());
       } catch (error) {
@@ -51,21 +56,41 @@ function EditProfile() {
     setTempDateOfBirth(event.target.value);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Show image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      
+      // Encode image to Base64
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        const base64 = fileReader.result.split(",")[1]; // Get the Base64 part
+        setEncodedImage(base64);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+
   const handleSave = async () => {
     const uid = localStorage.getItem("uid");
     if (!uid) {
       alert("No user UID found in local storage.");
       return;
     }
-
+    if(!encodedImage){
+      alert("no file selected");
+    }
     try {
-      await axios.put(`http://localhost:5000/api/google_login/${uid}`, {
-        dateOfBirth: tempDateOfBirth,
-        phoneNumber: profile.phoneNumber,  // Send phoneNumber
-        pilotLicense: profile.pilotLicense  // Send pilotLicense
+      const response = await axios.post(`http://localhost:5000/api/google_login/${uid}`, {
+        image : encodedImage,
       });
-
-      alert("Profile updated successfully");
+      setImage(encodedImage);
+      console.log("image uploaded successfully",encodedImage);
     } catch (error) {
       console.error("Error saving profile information:", error);
     }
@@ -84,14 +109,18 @@ function EditProfile() {
     const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
     return minDate.toISOString().split("T")[0];
   };
-
+  console.log(encodedImage);
+  console.log(profile.image);
   return (
     <div className="w-full min-h-screen bg-black">
       <Navbar />
+      <img src={profile.image} alt="" />
       <div className="h-[calc(100%-48px)] w-full p-4 flex flex-col items-center justify-center">
         <div className="flex justify-center mb-4">
           <div className="relative">
-              <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
+              {profile.image ? 
+              <img src={`data:image/jpeg;base64,${profile.image}`} alt="Profile" className="w-32 h-32 rounded-full object-cover" /> :
+              <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />}
               <div className="absolute bottom-0 right-0">
               <button
                 onClick={() => setDropdownVisible(!dropdownVisible)}
@@ -106,6 +135,7 @@ function EditProfile() {
                     <input
                       type="file"
                       accept="image/*"
+                      onClick={handleImageChange}
                       className="hidden"
                     />
                   </label>
