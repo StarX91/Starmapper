@@ -36,6 +36,10 @@ const Navbar = () => {
     navigate(path);
   };
 
+  const handlePlanner = (buttonName, path) => {
+    navigate('/services/planner');
+  };
+
   const moveSquareToActiveButton = () => {
     const button = buttonsRef.current[activeButton];
     if (button) {
@@ -90,7 +94,7 @@ const Navbar = () => {
           </button> */}
           <button
             ref={(el) => (buttonsRef.current["controlCenter"] = el)}
-            onClick={() => handleButtonClick("controlCenter", "/planner")}
+            onClick={handlePlanner}
             className={`w-28 h-24 my-2 rounded-sm flex flex-col items-center relative z-10 ${
               activeButton === "controlCenter" ? "text-white" : "text-zinc-400"
             }`}

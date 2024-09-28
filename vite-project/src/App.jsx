@@ -46,6 +46,7 @@ import Taskss from "./pages/StarMarg/Dashboard/Tasks";
 import Projects from "./pages/StarMarg/CreateProject/Projects";
 import GoogleMap from "./pages/StarMarg/CreateProject/Map"
 import MapMode from "./pages/StarMarg/CreateProject/MapMode";
+import TaskPlanner from "./components/Planner";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -88,6 +89,10 @@ const App = () => {
                 <Route
                   path="/services/settings/profile"
                   element={<Profile />}
+                />
+                <Route
+                  path="/services/planner"
+                  element={<TaskPlanner />}
                 />
                 <Route
                   path="/services/settings/invoices"
