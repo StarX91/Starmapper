@@ -177,6 +177,8 @@ import React, { useState } from 'react';
 import { Bell, ChevronLeft, ChevronRight, Plus, Search, User } from 'lucide-react';
 import Navbartwo from '../pages/StarMarg/Navbar/Navbartwo';
 
+import Navbar from './ServicesNavbar';
+
 const TaskPlanner = () => {
   const [showModal, setShowModal] = useState(false);
   const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
@@ -252,7 +254,7 @@ const TaskPlanner = () => {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      <Navbartwo />
+      <Navbar />
 
       <div className='p-4'>
         <h2 className="text-xl font-bold">Tasks</h2>
