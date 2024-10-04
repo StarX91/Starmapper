@@ -204,6 +204,7 @@ const Data = () => {
     pilotLicense: "",
     phoneNumber: "9232324433", // Default Phone
     profileImg: "",
+    image: "",
     email: "test@gmail.com",
     country: "India", // Default Country
     state: "Maharashtra", // Default State
@@ -230,6 +231,7 @@ const Data = () => {
           username: data.username || "",
           profileImg: data.profile_img || "",
           email: data.email || "",
+          image:data.image || "",
           phoneNumber: data.phone_number || "9232324433", // Replace with actual phone number
           dateOfBirth: data.date_of_birth || "9 December 2004", // Replace with actual DOB
           country: data.country || "India",
@@ -240,6 +242,7 @@ const Data = () => {
           username: data.username,
           profileImg: data.profile_img,
           email: data.email,
+          image: data.image,
           phoneNumber: data.phone_number,
           dateOfBirth: data.date_of_birth,
           country: data.country,
@@ -293,9 +296,9 @@ const Data = () => {
     <div className="bg-neutral-900 text-white w-full p-4 lg:p-8 flex flex-col items-center">
       <div className="flex flex-col items-center">
         <div className="w-20 h-20 bg-neutral-700 rounded-full mb-4">
-          {profile.profileImg ? (
+          {profile.image ? (
             <img
-              src={profile.profileImg}
+              src={`data:image/jpeg;base64,${profile.image}`}
               alt="Profile"
               className="w-full h-full rounded-full object-cover"
             />

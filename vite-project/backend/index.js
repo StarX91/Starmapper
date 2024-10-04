@@ -8,9 +8,9 @@ const path = require('path');
 const dotenv = require('dotenv');
 const User = require('./models/google_login'); // Ensure this path is correct
 const Register = require('./models/register');
+const Images = require('./models/images_starmarg');
 
 dotenv.config();
-
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,7 +38,7 @@ app.post('/upload', upload.array('files'), (req, res) => {
 
 
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/yourdb', {
+mongoose.connect('mongodb+srv://starx91:Starx9119@starx91.ol9uz.mongodb.net/Starx?retryWrites=true&w=majority&appName=starx91', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -165,33 +165,65 @@ app.put('/api/google_login/:uid/delete-image', async (req, res) => {
   }
 });
 
-// New endpoint to upload user image via Multer
-app.post('/api/google_login/:uid/upload-image', upload.single('file'), async (req, res) => {
+app.post('/upload-images/:uid', async (req, res) => {
   const { uid } = req.params;
-
-  if (!req.file) {
-    return res.status(400).send('No file uploaded');
-  }
+  const { images } = req.body;
 
   try {
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // Filter out any null or empty images
+    const savedImages = images
+      .filter(file => file.base64 || file.driveLink) 
+      .map(file => ({
+        name: file.name || 'Unnamed file',
+        data: file.base64 || null, 
+        driveLink: file.driveLink || null 
+      }));
 
-    const updatedUser = await User.findOneAndUpdate(
-      { uid },
-      { image: imageUrl },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).send('User not found');
+    if (savedImages.length === 0) {
+      return res.status(400).json({ message: 'No valid images to upload' });
     }
 
-    res.status(200).json({ imageUrl });
+    const userImages = await Images.findOne({ uid });
+
+    if (userImages) {
+      const updatedImages = await Images.findOneAndUpdate(
+        { uid },
+        { $push: { image: { $each: savedImages } } }, 
+        { new: true } 
+      );
+      return res.status(200).json({ message: 'Images added successfully', images: updatedImages });
+    } else {
+      const newImages = new Images({
+        uid,
+        image: savedImages
+      });
+      await newImages.save();
+      return res.status(200).json({ message: 'First image uploaded successfully', images: newImages });
+    }
   } catch (error) {
-    console.error('Error uploading user image:', error);
-    res.status(500).send('Error uploading user image');
+    console.error('Image upload failed:', error);
+    res.status(500).send('Image upload failed');
   }
 });
+
+
+
+// Endpoint to get images for a specific user
+app.get('/get-images/:uid', async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const userImages = await Images.findOne({ uid });
+    if (!userImages) {
+      return res.status(404).json({ images: [] });
+    }
+    return res.status(200).json({ images: userImages.image });
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    return res.status(500).send('Error fetching images');
+  }
+});
+
 
 // Start the server
 app.listen(PORT, () => {

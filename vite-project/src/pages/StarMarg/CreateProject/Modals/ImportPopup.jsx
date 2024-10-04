@@ -6,14 +6,24 @@ import useDrivePicker from 'react-google-drive-picker';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 
-const ImportPopup = ({ show, onClose }) => {
+const ImportPopup = ({ show, onClose, uid }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [openPicker] = useDrivePicker();
 
   // File drop zone logic
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
-      setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Convert the file to Base64 format and add to selected files
+          setSelectedFiles((prevFiles) => [
+            ...prevFiles,
+            { name: file.name, base64: reader.result.split(',')[1] }, // Store Base64 without the prefix
+          ]);
+        };
+        reader.readAsDataURL(file); // Convert to Base64
+      });
     },
     accept: {
       'application/zip': ['.zip'],
@@ -55,19 +65,27 @@ const ImportPopup = ({ show, onClose }) => {
     });
   };
 
-  // File upload logic
+  // File upload logic to send Base64 to the backend
   const handleFileUpload = async () => {
-    const formData = new FormData();
-    selectedFiles.forEach((file) => {
-      formData.append('files', file);
-    });
+    const uid = localStorage.getItem('uid');
+    console.log(uid);
+    const filesToUpload = selectedFiles.map(file => ({
+      name: file.name,
+      base64: file.base64 || null, 
+      driveLink: file.webViewLink || null,
+    }));
 
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post(`http://localhost:5000/upload-images/${uid}`, {
+        images: filesToUpload,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      console.log('File upload successful', response.data);
+      console.log('File upload success:', response.data.images);
       setSelectedFiles([]);
+      window.location.reload();
     } catch (error) {
       console.error('File upload failed', error);
     }
@@ -97,7 +115,7 @@ const ImportPopup = ({ show, onClose }) => {
           {/* Local Storage */}
           <div
             {...getRootProps({
-              className: 'flex flex-col border border-neutral-400 p-6 rounded-md items-center space-y-2 text-neutral-300 hover:text-neutral-200 cursor-pointer'
+              className: 'flex flex-col border border-neutral-400 p-6 rounded-md items-center space-y-2 text-neutral-300 hover:text-neutral-200 cursor-pointer',
             })}
           >
             <input {...getInputProps()} />
@@ -109,7 +127,7 @@ const ImportPopup = ({ show, onClose }) => {
         {/* Drag and Drop Area */}
         <div
           {...getRootProps({
-            className: 'border-2 border-dashed border-neutral-500 rounded-lg p-12 h-50 text-center flex justify-center items-center text-neutral-400'
+            className: 'border-2 border-dashed border-neutral-500 rounded-lg p-12 h-50 text-center flex justify-center items-center text-neutral-400',
           })}
         >
           <input {...getInputProps()} />

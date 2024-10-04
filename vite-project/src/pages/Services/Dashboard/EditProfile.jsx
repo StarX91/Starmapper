@@ -3,13 +3,12 @@ import Navbar from "../../../components/ServicesNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiEdit } from "react-icons/fi";
-import {useProfile} from "../../../context/ProfileImageContext"
+import { useProfile } from "../../../context/ProfileImageContext";
 import { IoIosArrowForward } from "react-icons/io";
 
 function EditProfile() {
   const navigate = useNavigate();
-  const {setImage} = useProfile();
-  const {image} = useProfile();
+  const { setImage } = useProfile();
   const [preview, setPreview] = useState(null);
   const [encodedImage, setEncodedImage] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -20,7 +19,7 @@ function EditProfile() {
     pilotLicense: "",
     phoneNumber: "",
     profileImg: "",
-    image:"",
+    image: "",
   });
 
   useEffect(() => {
@@ -41,9 +40,16 @@ function EditProfile() {
           pilotLicense: data.pilotLicense || "",
           phoneNumber: data.phoneNumber || "",
           profileImg: data.profile_img || "",
-          image: data.image|| "",
+          image: data.image || "",
         });
         setTempDateOfBirth(data.dateOfBirth || calculateMinDate());
+
+        // Set the initial preview image if available
+        if (data.image) {
+          setPreview(`data:image/jpeg;base64,${data.image}`);
+        } else if (data.profile_img) {
+          setPreview(data.profile_img);
+        }
       } catch (error) {
         console.error("Error getting user profile:", error);
       }
@@ -62,10 +68,10 @@ function EditProfile() {
       // Show image preview
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result);
+        setPreview(reader.result); // Set preview to selected image
       };
       reader.readAsDataURL(file);
-      
+
       // Encode image to Base64
       const fileReader = new FileReader();
       fileReader.onloadend = () => {
@@ -82,15 +88,17 @@ function EditProfile() {
       alert("No user UID found in local storage.");
       return;
     }
-    if(!encodedImage){
-      alert("no file selected");
+    if (!encodedImage) {
+      alert("No file selected");
+      return;
     }
     try {
       const response = await axios.post(`http://localhost:5000/api/google_login/${uid}`, {
-        image : encodedImage,
+        image: encodedImage,
       });
-      setImage(encodedImage);
-      console.log("image uploaded successfully",encodedImage);
+      setImage(`data:image/jpeg;base64,${encodedImage}`);
+      setPreview(`data:image/jpeg;base64,${encodedImage}`); // Update preview with new image
+      console.log("Image uploaded successfully", encodedImage);
     } catch (error) {
       console.error("Error saving profile information:", error);
     }
@@ -109,24 +117,24 @@ function EditProfile() {
     const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
     return minDate.toISOString().split("T")[0];
   };
-  console.log(encodedImage);
-  console.log(profile.image);
+
   return (
     <div className="w-full min-h-screen bg-black">
       <Navbar />
-      <img src={profile.image} alt="" />
       <div className="h-[calc(100%-48px)] w-full p-4 flex flex-col items-center justify-center">
         <div className="flex justify-center mb-4">
           <div className="relative">
-              {profile.image ? 
-              <img src={`data:image/jpeg;base64,${profile.image}`} alt="Profile" className="w-32 h-32 rounded-full object-cover" /> :
-              <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />}
-              <div className="absolute bottom-0 right-0">
+            {preview ? (
+              <img src={preview} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
+            ) : (
+              <img src={profile.profileImg} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
+            )}
+            <div className="absolute bottom-0 right-0">
               <button
                 onClick={() => setDropdownVisible(!dropdownVisible)}
                 className="bg-neutral-900 p-1 rounded-full shadow-md"
               >
-              <FiEdit className="size-5 text-neutral-600" />
+                <FiEdit className="size-5 text-neutral-600" />
               </button>
               {dropdownVisible && (
                 <div className="absolute right-0 mt-2 w-40 bg-neutral-900 rounded-md shadow-lg z-10">
@@ -135,14 +143,11 @@ function EditProfile() {
                     <input
                       type="file"
                       accept="image/*"
-                      onClick={handleImageChange}
+                      onChange={handleImageChange} // Use onChange instead of onClick
                       className="hidden"
                     />
                   </label>
-                  <button
-                    className="block text-left p-2 w-full text-neutral-700 font-semibold hover:bg-neutral-950 cursor-pointer"
-                  >
-                    {/* <MdOutlineDelete className="inline ml-2 text-red-900"/> */}
+                  <button className="block text-left p-2 w-full text-neutral-700 font-semibold hover:bg-neutral-950 cursor-pointer">
                     Delete Picture
                   </button>
                 </div>
