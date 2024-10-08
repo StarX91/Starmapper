@@ -47,6 +47,11 @@ import Projects from "./pages/StarMarg/CreateProject/Projects";
 import GoogleMap from "./pages/StarMarg/CreateProject/Map"
 import MapMode from "./pages/StarMarg/CreateProject/MapMode";
 import TaskPlanner from "./components/Planner";
+import Dashboard2 from "./pages/Services/Dashboard/Dashboard";
+import UsageStatsDashboard from "./pages/Services/Dashboard/UsageStatistics";
+import TeamMembersList from "./components/Teams";
+import ApiKeysDashboard from "./pages/Services/Dashboard/ApiDashboard";
+import SecuritySettings from "./pages/Services/Dashboard/Security";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -90,6 +95,27 @@ const App = () => {
                   path="/services/settings/profile"
                   element={<Profile />}
                 />
+                <Route
+                  path="/services/settings/Stat"
+                  element={<UsageStatsDashboard />}
+                />
+                                <Route
+                  path="/services/dashboard"
+                  element={<Dashboard2/>}
+                />
+                <Route path="/services/teams" element={<TeamMembersList />} />
+
+                <Route
+                  path="/services/settings/ApiKeys"
+                  element={<ApiKeysDashboard />}
+                />
+
+                <Route
+                  path="/services/settings/Security"
+                  element={<SecuritySettings/>}
+                />
+
+
                 <Route
                   path="/services/planner"
                   element={<TaskPlanner />}

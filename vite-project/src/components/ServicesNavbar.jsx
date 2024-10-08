@@ -39,6 +39,9 @@ const Navbar = () => {
   const handlePlanner = (buttonName, path) => {
     navigate('/services/planner');
   };
+  const handleTeams = (buttonName, path) => {
+    navigate('/services/teams');
+  };
 
   const moveSquareToActiveButton = () => {
     const button = buttonsRef.current[activeButton];
@@ -74,7 +77,7 @@ const Navbar = () => {
           </button>
           <button
             ref={(el) => (buttonsRef.current["dashboard"] = el)}
-            onClick={() => handleButtonClick("dashboard", "/services")}
+            onClick={() => handleButtonClick("dashboard", "/services/dashboard")}
             className={`w-24 h-14 my-1  rounded-sm flex flex-col items-center relative z-10 ${
               activeButton === "dashboard" ? "text-white" : "text-zinc-400"
             }`}
@@ -104,7 +107,7 @@ const Navbar = () => {
           </button>
           <button
             ref={(el) => (buttonsRef.current["teams"] = el)}
-            onClick={() => handleButtonClick("teams", "/teams")}
+            onClick={handleTeams}
             className={`w-36 h-24  rounded-sm flex flex-col items-center relative z-10 ${
               activeButton === "teams" ? "text-white" : "text-zinc-400"
             }`}
