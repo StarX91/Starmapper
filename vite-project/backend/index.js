@@ -68,16 +68,45 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Check if user exists by email
+app.get('/register/check-user', async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const user = await Register.findOne({ email });
+    if (user) {
+      return res.status(200).json({ exists: true, user });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.error('Error checking if user exists:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+app.post('/update-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+  
+  try {
+    // Hash the new password (use bcrypt or similar)
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in your database
+    await Register.updateOne({ email }, { password: hashedPassword });
+
+    res.status(200).send('Password updated successfully');
+  } catch (error) {
+    res.status(500).send('Error updating password');
+  }
+});
+
+
 // Endpoint to handle Google sign-in
 app.post('/google-signin', async (req, res) => {
   const { uid, username, email, profile_img, image } = req.body;
 
   try {
-    const existingUser = await User.findOne({ uid });
-    if (existingUser) {
-      return res.status(200).send('User already exists');
-    }
-
     const newUser = new User({ uid, username, email, profile_img, image });
     await newUser.save();
     res.status(201).send('User registered successfully');
@@ -104,7 +133,7 @@ app.get('/api/google_login/:uid', async (req, res) => {
 });
 
 // Check if user exists by email
-app.get('/check-user', async (req, res) => {
+app.get('/google-signin/check-user', async (req, res) => {
   const { email } = req.query;
 
   try {

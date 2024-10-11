@@ -2,19 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { confirmPasswordReset } from "firebase/auth";
 import { auth } from '../../components/firebaseConfig'; // Adjust the import path
+import axios from 'axios'; // Import axios to interact with your backend
 import starx91 from '../../components/assets/starx91.jpg';
 import bck from "../../components/assets/bck.jpg";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('Please Enter the password');
+  const [message, setMessage] = useState('Please enter your new password.');
+  const [email, setEmail] = useState(''); // Store email for backend update
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const oobCode = queryParams.get('oobCode');
+    const emailParam = queryParams.get('email'); // Optional: Include email in the reset link
+    if (emailParam) {
+      setEmail(emailParam); // Set email for later use
+    }
     if (!oobCode) {
       setMessage('Invalid or missing code.');
     }
@@ -35,8 +41,19 @@ const ResetPassword = () => {
     }
 
     try {
+      // Step 1: Reset the password in Firebase
       await confirmPasswordReset(auth, oobCode, password);
-      setMessage('Password has been reset. You can now log in with your new password.');
+      setMessage('Password has been reset in Firebase.');
+
+      // Step 2: Send request to your backend to update the password in your database
+      await axios.post('http://localhost:5000/update-password', {
+        email,
+        newPassword: password,
+      });
+
+      setMessage('Password has been reset in both Firebase and your database.');
+
+      // Step 3: Redirect to login page
       navigate('/login');
     } catch (error) {
       setMessage(error.message);
@@ -49,8 +66,8 @@ const ResetPassword = () => {
         <div className='flex justify-center content-center pt-4'>
           <img src={starx91} className='w-36 h-8 px-5'/>
         </div>
-        <div className='flex max-w-screen min-[320px] flex-wrap-reverse place-content-center md:flex-wrap-reverse lg:flex-nowrap'>
-          <div className='flex-row min-[320px] px-12 sm:px-28 mt-24 2xl:mt-44 mb-5'>
+        <div className='flex max-w-screen min-[320px]:flex-wrap-reverse place-content-center md:flex-wrap-reverse lg:flex-nowrap'>
+          <div className='flex-row min-[320px]:px-12 sm:px-28 mt-24 2xl:mt-44 mb-5'>
             <h1 className='text-white text-2xl font-bold'>Welcome Back!</h1>
             <h2 className='text-white mb-5'>Reset your password to get flying.</h2>
             <form onSubmit={handleResetPassword}>
@@ -62,7 +79,7 @@ const ResetPassword = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter new password"
                   required 
-                  className='min-[320px] h-9 md:w-72 lg:w-72 bg-zinc-900 rounded-lg p-3' 
+                  className='min-[320px]:h-9 md:w-72 lg:w-72 bg-zinc-900 rounded-lg p-3' 
                 />
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <input 
@@ -71,12 +88,12 @@ const ResetPassword = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm new password"
                   required
-                  className='min-[320px] h-9 md:w-72 lg:w-72 bg-zinc-900 rounded-lg p-3' 
+                  className='min-[320px]:h-9 md:w-72 lg:w-72 bg-zinc-900 rounded-lg p-3' 
                 />
                 <button 
                   type="submit" 
                   className='bg-white text-black rounded-md h-10 gap-34 font-bold hover:bg-zinc-200 border-solid border-2 hover:border-zinc-700'>
-                  Reset
+                  Reset Password
                 </button>
               </div>
             </form>

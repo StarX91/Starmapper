@@ -11,7 +11,6 @@ import { auth, googleProvider, appleProvider, signInWithPopup, signInWithEmailAn
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setProfileImg } = useContext(ProfileContext);
   const [message, setMessage] = useState('');
 
   const signInWithGoogle = async () => {

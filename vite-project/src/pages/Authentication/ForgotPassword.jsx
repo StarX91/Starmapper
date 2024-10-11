@@ -35,16 +35,19 @@ const ForgotPassword = () => {
 
   const handleEmailSubmit = async (event) => {
     event.preventDefault();
+    const actionCodeSettings = {
+      url: `${window.location.origin}/reset-password`, // Your custom URL
+      handleCodeInApp: true,
+    };
+  
     try {
-      await sendPasswordResetEmail(auth, email, {
-        url: `${window.location.origin}/reset-password`
-      });
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setMessage("Password reset email sent!");
     } catch (error) {
       setMessage(error.message);
     }
   };
-
+  
   const setUpRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible',
