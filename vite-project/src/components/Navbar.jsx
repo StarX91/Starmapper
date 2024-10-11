@@ -26,9 +26,9 @@ const Navbar = () => {
     navigate("/ss/edit-profile");
   };
 
-  const handleSettings = () => {
-    navigate("/ss/settings");
-  };
+  // const handleSettings = () => {
+  //   navigate("settings");
+  // };
 
   const handleDashboard = () => {
     navigate("/services");
@@ -61,7 +61,7 @@ const Navbar = () => {
               </p>
             </button>
           </Link>
-          <Link to="/ss/settings">
+          <Link to="/settings">
             <button className="w-20 h-14 mx-6 my-1 py-1 rounded-md flex flex-col items-center">
               <IoSettingsSharp className="text-zinc-300 w-8 h-8" />
               <p className="text-zinc-300 text-xs md:text-sm font-semibold">
