@@ -35,10 +35,10 @@ const Menu = () => {
             <span>Invoices</span>
           </button>
         </Link>
-        <button className={`${buttonClass} border-2 border-solid border-neutral-700`}>
+        {/* <button className={`${buttonClass} border-2 border-solid border-neutral-700`}>
           <FaShieldAlt className={iconClass} />
           <span>Security</span>
-        </button>
+        </button> */}
         <Link to="/services/settings/ApiKeys" className="w-full">
           <button className={`${buttonClass} border-2 border-solid border-neutral-700`}>
             <FaKey className={iconClass} />

@@ -86,7 +86,7 @@ const ApiKeysDashboard = () => {
   return (
     <div className="flex h-screen bg-black text-gray-500">
       <div className="flex-1 flex flex-col">
-        <Navbar />
+    
         <main className="flex-1 p-6">
           <div className="bg-gray-900 rounded-lg shadow">
             <div className="p-6 flex justify-between items-center border-b border-gray-700">

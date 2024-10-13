@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, ChevronDown, Edit, Lock, CreditCard, Key, Mail, Users } from 'lucide-react';
 import Navbar from '../../../components/ServicesNavbar';
+import { Link } from 'react-router-dom';
 
 const SecuritySettings = () => {
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
@@ -11,7 +12,7 @@ const SecuritySettings = () => {
 
   return (
     <div className="bg-black min-h-screen text-gray-300">
-      <Navbar />
+    
       <div className="container mx-auto p-4">
        
        
@@ -20,9 +21,12 @@ const SecuritySettings = () => {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-xl font-semibold text-gray-100">Login</h2>
-                <button className="text-blue-400">
+                <Link to='/settings'>
+                <button className="text-blue-400" >
                   <Edit size={16} />
                 </button>
+                </Link>
+              
               </div>
               <p className="text-gray-400">Password</p>
             </div>

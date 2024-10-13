@@ -13,12 +13,12 @@ const StatCard = ({ title, value, subtitle }) => (
 const UsageStatsDashboard = () => {
   return (
     <div className="bg-black text-white min-h-screen">
-      <Navbar />
+     
 
       <main className="p-4 mt-4">
         <div className="flex items-center justify-between mb-4">
         
-          <h2 className="text-xl"><span className='mr-4 mt-2'> <button><MoveLeftIcon /></button></span>Usage Statistics</h2>
+          <h2 className="text-xl">Usage Statistics</h2>
           <div className="flex space-x-4">
             <select className="bg-gray-800 rounded px-2 py-1">
               <option>This Week</option>
