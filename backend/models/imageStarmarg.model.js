@@ -11,6 +11,6 @@ const imageSchema = new mongoose.Schema({
   ],
 });
 
-const images_starmarg = mongoose.model("images_starmarg", imageSchema);
+const ImageStarmarg = mongoose.model("images_starmarg", imageSchema);
 
-module.exports = images_starmarg;
+module.exports = ImageStarmarg;
