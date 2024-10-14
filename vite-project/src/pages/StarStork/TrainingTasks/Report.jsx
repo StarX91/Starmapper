@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../../StarStork/Dashboard/Navbar";
+import Navbar from "../../../components/Navbar";
 import { FiShare2 } from "react-icons/fi";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { TbCube } from "react-icons/tb";

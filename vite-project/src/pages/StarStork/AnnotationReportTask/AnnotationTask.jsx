@@ -9,7 +9,7 @@ import { CgAddR } from "react-icons/cg";
 import NewProjectModal from "../TrainingTasks/NewProjectModal";
 import ImportModal from "../TrainingTasks/ImportModal";
 import ImagesetModal from "../TrainingTasks/ImagesetModal";
-import Navbar from "../Dashboard/Navbar";
+import Navbar from "../../../components/Navbar";
 
 const TrainingTask = () => {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
