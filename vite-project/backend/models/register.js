@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   profile_img: { type: String, default: '' },
-  password: { type: String, required: true } // Add password field
+  password: { type: String, required: true }, // Add password field
+  verified: { type:Boolean, required:true}
 }, { timestamps: true });
 
 const register = mongoose.model('register', userSchema);

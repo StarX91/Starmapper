@@ -55,6 +55,7 @@ import SecuritySettings from "./pages/Services/Dashboard/Security";
 import ApiComp from "./pages/Services/Settings/ApiKeys/Api";
 import StatComp from "./pages/Services/Settings/Statistics/StatComp";
 import SecurityComp from "./pages/Services/Settings/Security/SecurityComp";
+import Redirect from "./pages/Authentication/redirect";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -87,6 +88,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/redirect" element={<Redirect/>}/>
                 <Route path="/services" element={<Board />} />
                 <Route path="/services/edit-profile" element={<Edits />} />
                 <Route path="/settings" element={<Info />} />

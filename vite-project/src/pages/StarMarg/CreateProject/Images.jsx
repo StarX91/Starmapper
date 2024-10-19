@@ -21,7 +21,7 @@ const Images = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/get-images/${uid}`
+          `http://localhost:5000/get-images/starmarg/${uid}`
         );
         setImages(response.data.images); // Assuming 'images' is an array of Base64 strings
       } catch (error) {

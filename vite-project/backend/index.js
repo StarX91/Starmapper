@@ -8,8 +8,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const User = require('./models/google_login'); // Ensure this path is correct
 const Register = require('./models/register');
-const Images = require('./models/images_starmarg');
-
+const starmargImages = require('./models/images_starmarg');
+const starstorkImages = require('./models/images_starstork');
 dotenv.config();
 
 const app = express();
@@ -47,7 +47,7 @@ mongoose.connect('mongodb+srv://starx91:Starx9119@starx91.ol9uz.mongodb.net/Star
 
 // Endpoint to register a new user
 app.post('/register', async (req, res) => {
-  const { uid, username, email, password, profile_img } = req.body;
+  const { uid, username, email, password, profile_img,verified } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,7 +57,8 @@ app.post('/register', async (req, res) => {
       username,
       email,
       profile_img,
-      password: hashedPassword 
+      password: hashedPassword,
+      verified
     });
 
     await newUser.save();
@@ -67,6 +68,17 @@ app.post('/register', async (req, res) => {
     res.status(500).send('Error saving user');
   }
 });
+
+app.post('/register/verify', async (req, res) => {
+  const { uid } = req.body;
+  try {
+    await Register.updateOne({ uid }, { verified: true });
+    res.status(200).json({ message: "User verified successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error verifying user.", error });
+  }
+});
+
 
 // Check if user exists by email
 app.get('/register/check-user', async (req, res) => {
@@ -82,6 +94,26 @@ app.get('/register/check-user', async (req, res) => {
   } catch (error) {
     console.error('Error checking if user exists:', error);
     res.status(500).send('Server error');
+  }
+});
+
+// to check whether email is verified or not
+app.get('/login/verified', async (req, res) => {
+  const { username } = req.query;  // username corresponds to the email in this case
+
+  try {
+    // Find the user by email
+    const user = await Register.findOne({ email: username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Respond with the verification status
+    res.status(200).json({ verified: user.verified });
+  } catch (error) {
+    console.error('Error fetching verified status:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -194,7 +226,7 @@ app.put('/api/google_login/:uid/delete-image', async (req, res) => {
   }
 });
 
-app.post('/upload-images/:uid', async (req, res) => {
+app.post('/upload-images/starmarg/:uid', async (req, res) => {
   const { uid } = req.params;
   const { images } = req.body;
 
@@ -212,17 +244,17 @@ app.post('/upload-images/:uid', async (req, res) => {
       return res.status(400).json({ message: 'No valid images to upload' });
     }
 
-    const userImages = await Images.findOne({ uid });
+    const userImages = await starmargImages.findOne({ uid });
 
     if (userImages) {
-      const updatedImages = await Images.findOneAndUpdate(
+      const updatedImages = await starmargImages.findOneAndUpdate(
         { uid },
         { $push: { image: { $each: savedImages } } }, 
         { new: true } 
       );
       return res.status(200).json({ message: 'Images added successfully', images: updatedImages });
     } else {
-      const newImages = new Images({
+      const newImages = new starmargImages({
         uid,
         image: savedImages
       });
@@ -238,11 +270,11 @@ app.post('/upload-images/:uid', async (req, res) => {
 
 
 // Endpoint to get images for a specific user
-app.get('/get-images/:uid', async (req, res) => {
+app.get('/get-images/starmarg/:uid', async (req, res) => {
   const { uid } = req.params;
 
   try {
-    const userImages = await Images.findOne({ uid });
+    const userImages = await starmargImages.findOne({ uid });
     if (!userImages) {
       return res.status(404).json({ images: [] });
     }
@@ -252,7 +284,65 @@ app.get('/get-images/:uid', async (req, res) => {
     return res.status(500).send('Error fetching images');
   }
 });
+//image uploading of the starstork
+app.post('/upload-images/starstork/:uid', async (req, res) => {
+  const { uid } = req.params;
+  const { images } = req.body;
 
+  try {
+    // Filter out any null or empty images
+    const savedImages = images
+      .filter(file => file.base64 || file.driveLink) 
+      .map(file => ({
+        name: file.name || 'Unnamed file',
+        data: file.base64 || null, 
+        driveLink: file.driveLink || null 
+      }));
+
+    if (savedImages.length === 0) {
+      return res.status(400).json({ message: 'No valid images to upload' });
+    }
+
+    const userImages = await starstorkImages.findOne({ uid });
+
+    if (userImages) {
+      const updatedImages = await starstorkImages.findOneAndUpdate(
+        { uid },
+        { $push: { image: { $each: savedImages } } }, 
+        { new: true } 
+      );
+      return res.status(200).json({ message: 'Images added successfully', images: updatedImages });
+    } else {
+      const newImages = new starstorkImages({
+        uid,
+        image: savedImages
+      });
+      await newImages.save();
+      return res.status(200).json({ message: 'First image uploaded successfully', images: newImages });
+    }
+  } catch (error) {
+    console.error('Image upload failed:', error);
+    res.status(500).send('Image upload failed');
+  }
+});
+
+
+
+// Endpoint to get images for a specific user
+app.get('/get-images/starstork/:uid', async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const userImages = await starstorkImages.findOne({ uid });
+    if (!userImages) {
+      return res.status(404).json({ images: [] });
+    }
+    return res.status(200).json({ images: userImages.image });
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    return res.status(500).send('Error fetching images');
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {

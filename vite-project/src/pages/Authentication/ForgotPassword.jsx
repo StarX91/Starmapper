@@ -35,13 +35,9 @@ const ForgotPassword = () => {
 
   const handleEmailSubmit = async (event) => {
     event.preventDefault();
-    const actionCodeSettings = {
-      url: `${window.location.origin}/reset-password`, // Your custom URL
-      handleCodeInApp: true,
-    };
   
     try {
-      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      await sendPasswordResetEmail(auth, email);
       setMessage("Password reset email sent!");
     } catch (error) {
       setMessage(error.message);

@@ -7,6 +7,7 @@ import googleIcon from '../../components/assets/google.png';
 import bck from "../../components/assets/bck.jpg";
 import starx91 from '../../components/assets/starx91.jpg';
 //import { ProfileContext } from '../../context/ProfileContext.jsx';
+import axios from 'axios';
 import { auth, googleProvider, appleProvider, signInWithPopup, signInWithEmailAndPassword } from '../../components/firebaseConfig.jsx'; // Adjust the import path as needed
 
 const Login = () => {
@@ -55,8 +56,12 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, username, password);
       const user = userCredential.user;
-
-      if (user.emailVerified) {
+      const response = await axios.get('http://localhost:5000/login/verified',{
+        params : {username}
+      })
+      const { verified } = response.data;
+      if (user.emailVerified && verified) {
+        console.log(user);
         navigate('/services');
       } else {
         setMessage('Please verify your email before logging in.');

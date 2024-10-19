@@ -76,7 +76,7 @@ const ImportPopup = ({ show, onClose, uid }) => {
     }));
 
     try {
-      const response = await axios.post(`http://localhost:5000/upload-images/${uid}`, {
+      const response = await axios.post(`http://localhost:5000/upload-images/starmarg/${uid}`, {
         images: filesToUpload,
       }, {
         headers: {

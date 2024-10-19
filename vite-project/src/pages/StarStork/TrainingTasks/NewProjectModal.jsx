@@ -64,7 +64,7 @@ const NewProjectModal = ({ isOpen, onClose, onSave }) => {
 export default NewProjectModal; */
 import React, { useState } from "react";
 import Modal from "react-modal"; // Ensure you install 'react-modal'
-
+import GoogleMap from "../../StarMarg/CreateProject/Map";
 const NewProjectModal = ({ isOpen, onClose, onSave }) => {
   const [projectName, setProjectName] = useState("");
 
@@ -105,9 +105,12 @@ const NewProjectModal = ({ isOpen, onClose, onSave }) => {
         />
       </div>
 
-      {/* Empty Container */}
-      <div className="bg-neutral-800 h-32 sm:h-40 mb-4 md:mb-6 rounded-md"></div>
-
+      <div className="bg-neutral-800 mb-4 md:mb-6 rounded-md overflow-hidden">
+        <div className="w-full h-48 sm:h-60 relative">
+          {/* Set height for better layout control */}
+          <GoogleMap className="absolute inset-0 w-full h-full" />
+        </div>
+      </div>
       {/* Modal Buttons */}
       <div className="flex justify-between">
         <button

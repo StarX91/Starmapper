@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaFileImport } from "react-icons/fa";
 import { CgAddR } from "react-icons/cg";
@@ -10,6 +10,7 @@ import NewProjectModal from "../TrainingTasks/NewProjectModal";
 import ImportModal from "../TrainingTasks/ImportModal";
 import ImagesetModal from "../TrainingTasks/ImagesetModal";
 import Navbar from "../../../components/Navbar";
+import axios from 'axios';
 
 const TrainingTask = () => {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
@@ -26,9 +27,30 @@ const TrainingTask = () => {
   const [isImagesetModalOpen, setIsImagesetModalOpen] = useState(false);
   const [isTaskAssigned, setIsTaskAssigned] = useState(false);
   const [isAnnotated, setIsAnnotated] = useState(false);
+  const [images, setImages] = useState([]);
 
   const navigate = useNavigate();
 
+  
+  const uid = localStorage.getItem("uid");
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!uid) return; // No UID, don't fetch images
+
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/get-images/starstork/${uid}`
+        );
+        setImages(response.data.images); // Assuming 'images' is an array of Base64 strings
+      } catch (error) {
+        console.error("Error fetching images", error);
+      }
+    };
+
+    fetchImages();
+  }, [uid]);
+  
   const handleAnnotateSuccess = () => {
     setIsAnnotated(true);
   };
@@ -265,6 +287,51 @@ const TrainingTask = () => {
             <h2 className="text-neutral-400 text-lg font-medium">
               Project name / Imageset (0)
             </h2>
+                                  {/* Display Uploaded Images */}
+                                  <div className="grid grid-cols-4 gap-4">
+              {uid ? (
+                images.length > 0 ? (
+                  images.map((image, index) => (
+                    <div
+                      key={index}
+                      className="border border-neutral-500 p-2 rounded-lg"
+                    >
+                      {image.data ? (
+                        <a
+                          href={`data:image/png;base64,${image.data}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={`data:image/png;base64,${image.data}`}
+                            alt={`Image ${index + 1}`}
+                            className="w-full h-auto"
+                          />
+                        </a>
+                      ) : image.driveLink ? (
+                        <a
+                          href={image.driveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={image.driveLink}
+                            alt={`Drive Image ${index + 1}`}
+                            className="w-full h-auto"
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-neutral-500">No images uploaded.</p>
+                )
+              ) : (
+                <p className="text-neutral-500">Please log in to view your images.</p>
+              )}
+            </div>
             <div className="relative inline-block text-left">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}

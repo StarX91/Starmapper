@@ -72,61 +72,49 @@ const Register = () => {
     // Existing Apple sign-in logic...
   };
 
-const handleSubmit = async (values, { setSubmitting }) => {
-  const { username, email, password } = values;
-
-  try {
-    // Step 1: Check if the user already exists in the database
-    const userExistsResponse = await axios.get('http://localhost:5000/register/check-user', {
-      params: { email }
-    });
-
-    if (userExistsResponse.data.exists) {
-      // Step 2: If the user exists, display a popup and stop further execution
-      alert('User already exists. Please log in instead.');
-      setSubmitting(false); // Stop the loading indicator
-      return; // Exit the function to prevent further actions
-    }
-
-    // Step 3: If the user doesn't exist, proceed with Firebase registration
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // Step 4: Send email verification
-    await sendEmailVerification(user);
-    setVerificationMessage(`A verification email has been sent to ${email}. Please check your inbox.`);
-
-    // Step 5: Wait for the user to verify their email
-    const checkEmailVerified = async () => {
-      await user.reload(); // Reload user to check verification status
-      if (user.emailVerified) {
-        // Save user details to MongoDB only after verification
-        await axios.post('http://localhost:5000/register', {
-          uid: user.uid,
-          username,
-          email,
-          profile_img: user.photoURL, // Optionally store the profile image
-          password // Send the password to be hashed on the server
-        });
-
-        // Redirect to the login page after verification
-        navigate('/login', { state: { emailSent: true, email } });
-      } else {
-        // Check again after a delay (polling)
-        setTimeout(checkEmailVerified, 3000); // Poll every 3 seconds
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const { username, email, password } = values;
+  
+    try {
+      // Step 1: Check if the user already exists in the database
+      const userExistsResponse = await axios.get('http://localhost:5000/register/check-user', {
+        params: { email }
+      });
+  
+      if (userExistsResponse.data.exists) {
+        // Step 2: If the user exists, display a popup and stop further execution
+        alert('User already exists. Please log in instead.');
+        return; // Exit the function to prevent further actions
       }
-    };
-
-    // Step 6: Start checking for email verification
-    checkEmailVerified();
-    
-  } catch (error) {
-    console.error("Error creating user:", error);
-    alert('Error creating user');
-  } finally {
-    setSubmitting(false);
-  }
-};
+  
+      // Step 3: If the user doesn't exist, proceed with Firebase registration
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // Step 4: Send email verification
+      await sendEmailVerification(user);
+      setVerificationMessage(`A verification email has been sent to ${email}. Please check your inbox.`);
+      // Step 5: Store user data in your database with verified: false
+      const response = await axios.post('http://localhost:5000/register', {
+        uid: user.uid,
+        username,
+        email,
+        password,
+        profile_img: user.photoURL, // Optionally store the profile image
+        verified:false // Set verified to false initially
+      });
+      console.log(response);
+      // Notify user to check their email
+      alert("Check your email for verification!");
+  
+    } catch (error) {
+      console.error("Error creating user:", error);
+      alert('Error creating user');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
 
   
   

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, OAuthProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, signOut, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail, confirmPasswordReset } from 'firebase/auth';
+import { getAuth, applyActionCode, GoogleAuthProvider, OAuthProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, signOut, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail, confirmPasswordReset } from 'firebase/auth';
 
 // Firebase configuration object
 const firebaseConfig = {
@@ -23,4 +23,4 @@ const googleProvider = new GoogleAuthProvider();
 const appleProvider = new OAuthProvider('apple.com');
 
 // export { auth, googleProvider, appleProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, signOut, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail, confirmPasswordReset };
-export {auth,googleProvider,appleProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail, confirmPasswordReset}
+export {auth, applyActionCode, googleProvider,appleProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, sendPasswordResetEmail, confirmPasswordReset}
