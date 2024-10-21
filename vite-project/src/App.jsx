@@ -56,6 +56,7 @@ import ApiComp from "./pages/Services/Settings/ApiKeys/Api";
 import StatComp from "./pages/Services/Settings/Statistics/StatComp";
 import SecurityComp from "./pages/Services/Settings/Security/SecurityComp";
 import Redirect from "./pages/Authentication/redirect";
+import DronePlanner from "./pages/Maps/Map1";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -92,6 +93,7 @@ const App = () => {
                 <Route path="/services" element={<Board />} />
                 <Route path="/services/edit-profile" element={<Edits />} />
                 <Route path="/settings" element={<Info />} />
+                <Route path="/map1" element={<DronePlanner />} />
                 <Route
                   path="/services/settings/subscription"
                   element={<Subs />}
