@@ -66,9 +66,12 @@ const Plans = () => {
         <div className="bg-neutral-900 rounded-3xl p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-neutral-500 text-xl">Maps (1)</h2>
+            <Link to='/sm/map'>
+           
             <button className="text-neutral-400 hover:text-neutral-300 border border-neutral-400 rounded-lg p-2">
               <span className="border-cyan-50">View All</span>
             </button>
+            </Link>
           </div>
           <div className="bg-neutral-800 p-4 rounded-lg">
             <div className="w-40 h-40 rounded-lg bg-neutral-500 mb-2"></div>
