@@ -57,6 +57,9 @@ import StatComp from "./pages/Services/Settings/Statistics/StatComp";
 import SecurityComp from "./pages/Services/Settings/Security/SecurityComp";
 import Redirect from "./pages/Authentication/redirect";
 import DronePlanner from "./pages/Maps/Map1";
+import StarStorkImages from "./pages/StarStork/AnnotationReportTask/ImagesStarStork";
+import StarMapperNav from "./pages/Maps/mapsStarMarg";
+import MapInterface from "./pages/Maps/Map2";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -94,6 +97,8 @@ const App = () => {
                 <Route path="/services/edit-profile" element={<Edits />} />
                 <Route path="/settings" element={<Info />} />
                 <Route path="/map1" element={<DronePlanner />} />
+                <Route path="/sm/map" element={<StarMapperNav />} />
+                <Route path="/sm/map2" element={<MapInterface />} />
                 <Route
                   path="/services/settings/subscription"
                   element={<Subs />}
@@ -134,6 +139,8 @@ const App = () => {
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
                 <Route path="/images" element={<Images />} />
+                <Route path="/ss/images" element={<StarStorkImages />} />
+                <Route path="/ss/imagesSelection" element={<StarStorkImages />} />
                 {/* Define the route for UploadImages */}
                 <Route path="/upload-images" element={<UploadImages />} />
                 <Route

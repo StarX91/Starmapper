@@ -11,6 +11,7 @@ import ImportModal from "../TrainingTasks/ImportModal";
 import ImagesetModal from "../TrainingTasks/ImagesetModal";
 import Navbar from "../../../components/Navbar";
 import axios from 'axios';
+import StarStorkImages from "./ImagesStarStork";
 
 const TrainingTask = () => {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
@@ -43,6 +44,7 @@ const TrainingTask = () => {
           `http://localhost:5000/get-images/starstork/${uid}`
         );
         setImages(response.data.images); // Assuming 'images' is an array of Base64 strings
+        
       } catch (error) {
         console.error("Error fetching images", error);
       }
@@ -283,95 +285,186 @@ const TrainingTask = () => {
             </div>
           </div>
         ) : (
-          <div className="flex bg-neutral-900 m-8 min-h-[550px] p-8 rounded-2xl shadow-md justify-between items-start">
-            <h2 className="text-neutral-400 text-lg font-medium">
-              Project name / Imageset (0)
-            </h2>
-                                  {/* Display Uploaded Images */}
-                                  <div className="grid grid-cols-4 gap-4">
-              {uid ? (
-                images.length > 0 ? (
-                  images.map((image, index) => (
-                    <div
-                      key={index}
-                      className="border border-neutral-500 p-2 rounded-lg"
-                    >
-                      {image.data ? (
-                        <a
-                          href={`data:image/png;base64,${image.data}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src={`data:image/png;base64,${image.data}`}
-                            alt={`Image ${index + 1}`}
-                            className="w-full h-auto"
-                          />
-                        </a>
-                      ) : image.driveLink ? (
-                        <a
-                          href={image.driveLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src={image.driveLink}
-                            alt={`Drive Image ${index + 1}`}
-                            className="w-full h-auto"
-                          />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-neutral-500">No images uploaded.</p>
-                )
-              ) : (
-                <p className="text-neutral-500">Please log in to view your images.</p>
-              )}
-            </div>
-            <div className="relative inline-block text-left">
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="text-neutral-300 border border-neutral-400 p-3 rounded-md"
+          // <div className="flex bg-neutral-900 m-8 min-h-[550px] p-8 rounded-2xl shadow-md justify-between items-start">
+          //   <h2 className="text-neutral-400 text-lg font-medium">
+          //     Project name / Imageset (0)
+          //   </h2>
+          //                         {/* Display Uploaded Images */}
+          //                         <div className="grid grid-cols-4 gap-4">
+          //     {uid ? (
+          //       images.length > 0 ? (
+          //         images.map((image, index) => (
+          //           <div
+          //             key={index}
+          //             className="border border-neutral-500 p-2 rounded-lg"
+          //           >
+          //             {image.data ? (
+          //               <a
+          //                 href={`data:image/png;base64,${image.data}`}
+          //                 target="_blank"
+          //                 rel="noopener noreferrer"
+          //               >
+          //                 <img
+          //                   src={`data:image/png;base64,${image.data}`}
+          //                   alt={`Image ${index + 1}`}
+          //                   className="w-full h-auto"
+          //                 />
+          //               </a>
+          //             ) : image.driveLink ? (
+          //               <a
+          //                 href={image.driveLink}
+          //                 target="_blank"
+          //                 rel="noopener noreferrer"
+          //               >
+          //                 <img
+          //                   src={image.driveLink}
+          //                   alt={`Drive Image ${index + 1}`}
+          //                   className="w-full h-auto"
+          //                 />
+          //               </a>
+          //             ) : (
+          //               <></>
+          //             )}
+          //           </div>
+          //         ))
+          //       ) : (
+          //         <p className="text-neutral-500">No images uploaded.</p>
+          //       )
+          //     ) : (
+          //       <p className="text-neutral-500">Please log in to view your images.</p>
+          //     )}
+          //   </div>
+          //   <div className="relative inline-block text-left">
+          //     <button
+          //       onClick={() => setDropdownOpen(!dropdownOpen)}
+          //       className="text-neutral-300 border border-neutral-400 p-3 rounded-md"
+          //     >
+          //       + Imageset
+          //     </button>
+          //     {dropdownOpen && (
+          //       <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-neutral-900 shadow-lg ring-1 ring-black ring-opacity-5">
+          //         <div
+          //           className="py-2  bg-black rounded-lg"
+          //           role="menu"
+          //           aria-orientation="vertical"
+          //           aria-labelledby="options-menu"
+          //         >
+          //           <button
+          //             onClick={() => {
+          //               setDropdownOpen(false);
+          //               toggleImportModal();
+          //             }}
+          //             className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+          //           >
+          //             <FaFileImport className="mr-3" />
+          //             Import
+          //           </button>
+          //           <button
+          //             onClick={() => {
+          //               setDropdownOpen(false);
+          //               toggleImagesetModal();
+          //             }}
+          //             className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+          //           >
+          //             <CgAddR className="mr-3" />
+          //             Create
+          //           </button>
+          //         </div>
+          //       </div>
+          //     )}
+          //   </div>
+          // </div>
+          // <StarStorkImages />
+
+          <div className="flex flex-col lg:flex-row bg-neutral-900 m-4 sm:m-8 min-h-[550px] p-4 sm:p-8 rounded-2xl shadow-md lg:justify-between lg:items-start gap-4">
+  <h2 className="text-neutral-400 text-lg font-medium">
+    Project name / Imageset (0)
+  </h2>
+  {/* Display Uploaded Images */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+    {uid ? (
+      images.length > 0 ? (
+        images.map((image, index) => (
+          <div
+            key={index}
+            className="border border-neutral-500 p-2 rounded-lg"
+          >
+            {image.data ? (
+              <a
+                href={`data:image/png;base64,${image.data}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                + Imageset
-              </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-neutral-900 shadow-lg ring-1 ring-black ring-opacity-5">
-                  <div
-                    className="py-2  bg-black rounded-lg"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="options-menu"
-                  >
-                    <button
-                      onClick={() => {
-                        setDropdownOpen(false);
-                        toggleImportModal();
-                      }}
-                      className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
-                    >
-                      <FaFileImport className="mr-3" />
-                      Import
-                    </button>
-                    <button
-                      onClick={() => {
-                        setDropdownOpen(false);
-                        toggleImagesetModal();
-                      }}
-                      className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
-                    >
-                      <CgAddR className="mr-3" />
-                      Create
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+                <img
+                  src={`data:image/png;base64,${image.data}`}
+                  alt={`Image ${index + 1}`}
+                  className="w-full h-auto"
+                />
+              </a>
+            ) : image.driveLink ? (
+              <a
+                href={image.driveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={image.driveLink}
+                  alt={`Drive Image ${index + 1}`}
+                  className="w-full h-auto"
+                />
+              </a>
+            ) : (
+              <></>
+            )}
           </div>
+        ))
+      ) : (
+        <p className="text-neutral-500">No images uploaded.</p>
+      )
+    ) : (
+      <p className="text-neutral-500">Please log in to view your images.</p>
+    )}
+  </div>
+  <div className="relative inline-block text-left">
+    <button
+      onClick={() => setDropdownOpen(!dropdownOpen)}
+      className="text-neutral-300 border border-neutral-400 p-3 rounded-md whitespace-nowrap"
+    >
+      + Imageset
+    </button>
+    {dropdownOpen && (
+      <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-neutral-900 shadow-lg ring-1 ring-black ring-opacity-5 z-10">
+        <div
+          className="py-2 bg-black rounded-lg"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+        >
+          <button
+            onClick={() => {
+              setDropdownOpen(false);
+              toggleImportModal();
+            }}
+            className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+          >
+            <FaFileImport className="mr-3" />
+            Import
+          </button>
+          <button
+            onClick={() => {
+              setDropdownOpen(false);
+              toggleImagesetModal();
+            }}
+            className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+          >
+            <CgAddR className="mr-3" />
+            Create
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
         )}
 
         <NewProjectModal
