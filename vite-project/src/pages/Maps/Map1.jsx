@@ -172,6 +172,7 @@
 
 import React, { useState } from 'react';
 import { Map, ChevronLeft, ChevronRight, Maximize2, Scissors, Sun, Moon } from 'lucide-react';
+import GoogleMap from '../StarMarg/CreateProject/Map';
 
 const DronePlanner = () => {
   const [satelliteMode, setSatelliteMode] = useState(true);
@@ -317,6 +318,7 @@ const DronePlanner = () => {
 
       {/* Right Panel - Now 60% width */}
       <div className="w-3/5 relative">
+        <GoogleMap/>
         <img src="/api/placeholder/800/600" alt="Map" className="w-full h-full object-cover" />
         <div className="absolute top-4 right-4 flex space-x-2">
           <button className={`p-2 rounded ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'} transition-colors`}>

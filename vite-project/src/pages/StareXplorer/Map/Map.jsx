@@ -1,8 +1,8 @@
 import React from 'react'
-
+import GoogleMap from '../../StarMarg/CreateProject/Map'
 function Map() {
   return (
-    <div className='w-4/6 bg-red-300 h-full text-white'>Map</div>
+    <GoogleMap/>
   )
 }
 
