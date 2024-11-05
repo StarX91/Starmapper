@@ -1,3 +1,5 @@
+
+
 // import React, { useState } from 'react';
 // import { Map, ChevronLeft, ChevronRight, Maximize2, Scissors, Sun, Moon } from 'lucide-react';
 
@@ -16,8 +18,8 @@
 
 //   return (
 //     <div className={`flex h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
-//       {/* Left Panel - Now 50% width */}
-//       <div className={`w-1/2 p-4 border-r ${darkMode ? 'border-gray-700' : 'border-gray-300'} overflow-auto`}>
+//       {/* Left Panel - Now 40% width */}
+//       <div className={`w-2/5 p-4 border-r ${darkMode ? 'border-gray-700' : 'border-gray-300'} overflow-auto`}>
 //         <div className="flex justify-between mb-4">
 //           <button 
 //             className={`px-3 py-1 rounded flex items-center ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-200 hover:bg-gray-300'} transition-colors`}
@@ -143,8 +145,8 @@
 //         <button className="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">Save</button>
 //       </div>
 
-//       {/* Right Panel - Now 50% width */}
-//       <div className="w-1/2 relative">
+//       {/* Right Panel - Now 60% width */}
+//       <div className="w-3/5 relative">
 //         <img src="/api/placeholder/800/600" alt="Map" className="w-full h-full object-cover" />
 //         <div className="absolute top-4 right-4 flex space-x-2">
 //           <button className={`p-2 rounded ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'} transition-colors`}>
@@ -173,7 +175,7 @@ import { Map, ChevronLeft, ChevronRight, Maximize2, Scissors, Sun, Moon } from '
 
 const DronePlanner = () => {
   const [satelliteMode, setSatelliteMode] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [waypoints, setWaypoints] = useState([
     { id: 1, lat: 20.123213, lon: 75.434323, alt: 5, speed: 5 },
     { id: 2, lat: 20.123213, lon: 75.434323, alt: 5, speed: 5 },
@@ -185,7 +187,7 @@ const DronePlanner = () => {
   };
 
   return (
-    <div className={`flex h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+    <div className={`flex h-screen ${darkMode ? 'bg-black text-gray-400' : 'bg-gray-100 text-black'}`}>
       {/* Left Panel - Now 40% width */}
       <div className={`w-2/5 p-4 border-r ${darkMode ? 'border-gray-700' : 'border-gray-300'} overflow-auto`}>
         <div className="flex justify-between mb-4">
@@ -209,15 +211,15 @@ const DronePlanner = () => {
 
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Latitude</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Latitude</div>
             <div className="font-mono">20.123213</div>
           </div>
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Longitude</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Longitude</div>
             <div className="font-mono">75.434323</div>
           </div>
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Altitude</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Altitude</div>
             <div className="font-mono">1000 m</div>
           </div>
         </div>
@@ -232,13 +234,13 @@ const DronePlanner = () => {
 
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Select Flight Type</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Select Flight Type</div>
             <select className={`w-full p-2 rounded ${darkMode ? 'bg-gray-800' : 'bg-white border border-gray-300'}`}>
               <option>Way Points</option>
             </select>
           </div>
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Altitude</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Altitude</div>
             <input 
               type="text" 
               value="1000m" 
@@ -246,7 +248,7 @@ const DronePlanner = () => {
             />
           </div>
           <div>
-            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Flight Speed</div>
+            <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Flight Speed</div>
             <input 
               type="text" 
               value="1000 Kph" 
@@ -276,7 +278,7 @@ const DronePlanner = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Latitude</div>
+              <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Latitude</div>
               <input 
                 type="text" 
                 value="20.123213" 
@@ -284,7 +286,7 @@ const DronePlanner = () => {
               />
             </div>
             <div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Longitude</div>
+              <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Longitude</div>
               <input 
                 type="text" 
                 value="75.434323" 
@@ -292,7 +294,7 @@ const DronePlanner = () => {
               />
             </div>
             <div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Altitude (in meters)</div>
+              <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Altitude (in meters)</div>
               <input 
                 type="text" 
                 value="5" 
@@ -300,7 +302,7 @@ const DronePlanner = () => {
               />
             </div>
             <div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Flight Speed</div>
+              <div className={`text-xs ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>Flight Speed</div>
               <input 
                 type="text" 
                 value="5 Km/Hr" 
