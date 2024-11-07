@@ -191,7 +191,7 @@ const FileImportModal = ({ onClose }) => {
         </div>
       </div>
     </div>
-  )}
+  )
+}
 
-
-  export default FileImportModal
+export default FileImportModal;
