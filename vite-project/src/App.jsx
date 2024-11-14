@@ -37,6 +37,7 @@ import Annotation from "./pages/StarStork/AnnotationReportTask/Annotation";
 // import Imageset from './pages/StarStork/AnnotationReportTask/CreateImageset';
 // import VerifyOtp from './pages/StarStork/Dashboard/VerifyOtp';
 // import ErrorBoundary from './components/ErrorBoundary';
+import CreatePlan from "./pages/StarMarg/CreateProject/CreatePlan"
 import AnnotationTask from "./pages/StarStork/AnnotationReportTask/AnnotationTask";
 import TrainingTask from "./pages/StarStork/TrainingTasks/TrainingTask";
 import Setup from "./pages/StarStork/TrainingTasks/SetupPage";
@@ -57,10 +58,6 @@ import StatComp from "./pages/Services/Settings/Statistics/StatComp";
 import SecurityComp from "./pages/Services/Settings/Security/SecurityComp";
 import Redirect from "./pages/Authentication/redirect";
 import DronePlanner from "./pages/Maps/Map1";
-import StarStorkImages from "./pages/StarStork/AnnotationReportTask/ImagesStarStork";
-import StarMapperNav from "./pages/Maps/mapsStarMarg";
-import MapInterface from "./pages/Maps/Map2";
-import FileImportModal from "./pages/StarStork/TrainingTasks/ImportImages";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -97,9 +94,7 @@ const App = () => {
                 <Route path="/services" element={<Board />} />
                 <Route path="/services/edit-profile" element={<Edits />} />
                 <Route path="/settings" element={<Info />} />
-                <Route path="/dashboard" element={<DronePlanner />} />
-                <Route path="/sm/map" element={<StarMapperNav />} />
-                <Route path="/sm/map2" element={<MapInterface />} />
+                <Route path="/map1" element={<DronePlanner />} />
                 <Route
                   path="/services/settings/subscription"
                   element={<Subs />}
@@ -140,8 +135,6 @@ const App = () => {
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
                 <Route path="/images" element={<Images />} />
-                <Route path="/ss/images" element={<StarStorkImages />} />
-                <Route path="/ss/imagesSelection" element={<StarStorkImages />} />
                 {/* Define the route for UploadImages */}
                 <Route path="/upload-images" element={<UploadImages />} />
                 <Route
@@ -172,7 +165,7 @@ const App = () => {
                   <Route path="/plans" element={<Plans />} />
                   <Route path="/projects" element={<Projects />}/>
                   <Route path="/mapMode" element={<MapMode />} />
-                {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/edit-profile" element={<EditProfile />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -183,7 +176,7 @@ const App = () => {
                 <Route path="/report" element={<Report />} />
                 {/* <Route path="/verify-otp" element={<VerifyOtp />} /> */}
                 <Route path="/google_map" element={<GoogleMap/>} />
-                <Route path="/test" element={<FileImportModal/>} />
+                <Route path="/create-plan" element={<CreatePlan/>}/>
               </Routes>
               {/* </ErrorBoundary> */}
             </Router>
