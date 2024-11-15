@@ -165,7 +165,7 @@ const App = () => {
                   <Route path="/plans" element={<Plans />} />
                   <Route path="/projects" element={<Projects />}/>
                   <Route path="/mapMode" element={<MapMode />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<DronePlanner/>} />
                 <Route path="/edit-profile" element={<EditProfile />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
