@@ -12,6 +12,7 @@ const Images = () => {
   const [isImportPopupOpen, setIsImportPopupOpen] = useState(false);
   const [showImageset, setShowImageset] = useState(false);
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true); // To handle loading state
 
   const uid = localStorage.getItem("uid");
   const projectName = localStorage.getItem("projectName");
@@ -30,10 +31,17 @@ const Images = () => {
             imagesetName,
           },
         });
-        console.log(response.data.images);
-        setImages(response.data.images); // Assuming response has images array
+
+        // Check if there are images and set the state accordingly
+        if (response.data.images) {
+          setImages(response.data.images);
+        } else {
+          setImages([]); // In case no images are found
+        }
       } catch (error) {
         console.error("Error fetching images", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -97,17 +105,19 @@ const Images = () => {
 
           {/* Display Uploaded Images */}
           <div className="grid grid-cols-4 gap-4">
-            {images.length > 0 ? (
+            {loading ? (
+              <p className="text-neutral-500">Loading images...</p>
+            ) : images.length > 0 ? (
               images.map((image, index) => (
                 <div key={index} className="border border-neutral-500 p-2 rounded-lg">
-                  {image.data ? (
+                  {image.base64 ? (
                     <a
-                      href={`data:image/png;base64,${image.data}`}
+                      href={`data:image/png;base64,${image.base64}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <img
-                        src={`data:image/png;base64,${image.data}`}
+                        src={`data:image/png;base64,${image.base64}`}
                         alt={`Image ${index + 1}`}
                         className="w-full h-auto"
                       />

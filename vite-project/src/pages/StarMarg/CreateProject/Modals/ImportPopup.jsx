@@ -88,7 +88,7 @@ const ImportPopup = ({show,onClose}) => {
       console.log('File upload success:', response.data);
       setSelectedFiles([]);
       console.log(selectedFiles);
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error('File upload failed', error);
     }

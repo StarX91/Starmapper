@@ -8,9 +8,9 @@ const path = require('path');
 const dotenv = require('dotenv');
 const User = require('./models/google_login'); // Ensure this path is correct
 const Register = require('./models/register');
-const starmargImages = require('./models/images_starmarg');
-const starstorkImages = require('./models/images_starstork');
 const starmarg_data = require('./models/starmarg_database');
+const starstork_data = require('./models/starstork_database');
+const { v4: uuidv4 } = require('uuid');
 dotenv.config();
 
 const app = express();
@@ -227,132 +227,20 @@ app.put('/api/google_login/:uid/delete-image', async (req, res) => {
   }
 });
 
-// app.post('/upload-images/starmarg/:uid', async (req, res) => {
-//   const { uid } = req.params;
-//   const { images } = req.body;
-
-//   try {
-//     // Filter out any null or empty images
-//     const savedImages = images
-//       .filter(file => file.base64 || file.driveLink) 
-//       .map(file => ({
-//         name: file.name || 'Unnamed file',
-//         data: file.base64 || null, 
-//         driveLink: file.driveLink || null 
-//       }));
-
-//     if (savedImages.length === 0) {
-//       return res.status(400).json({ message: 'No valid images to upload' });
-//     }
-
-//     const userImages = await starmargImages.findOne({ uid });
-
-//     if (userImages) {
-//       const updatedImages = await starmargImages.findOneAndUpdate(
-//         { uid },
-//         { $push: { image: { $each: savedImages } } }, 
-//         { new: true } 
-//       );
-//       return res.status(200).json({ message: 'Images added successfully', images: updatedImages });
-//     } else {
-//       const newImages = new starmargImages({
-//         uid,
-//         image: savedImages
-//       });
-//       await newImages.save();
-//       return res.status(200).json({ message: 'First image uploaded successfully', images: newImages });
-//     }
-//   } catch (error) {
-//     console.error('Image upload failed:', error);
-//     res.status(500).send('Image upload failed');
-//   }
-// });
-
-
-
-// // Endpoint to get images for a specific user
-// app.get('/get-images/starmarg/:uid', async (req, res) => {
-//   const { uid } = req.params;
-
-//   try {
-//     const userImages = await starmargImages.findOne({ uid });
-//     if (!userImages) {
-//       return res.status(404).json({ images: [] });
-//     }
-//     return res.status(200).json({ images: userImages.image });
-//   } catch (error) {
-//     console.error('Error fetching images:', error);
-//     return res.status(500).send('Error fetching images');
-//   }
-// });
-//image uploading of the starstork
-// app.post('/upload-images/starstork/:uid', async (req, res) => {
-//   const { uid } = req.params;
-//   const { images } = req.body;
-
-//   try {
-//     // Filter out any null or empty images
-//     const savedImages = images
-//       .filter(file => file.base64 || file.driveLink) 
-//       .map(file => ({
-//         name: file.name || 'Unnamed file',
-//         data: file.base64 || null, 
-//         driveLink: file.driveLink || null 
-//       }));
-
-//     if (savedImages.length === 0) {
-//       return res.status(400).json({ message: 'No valid images to upload' });
-//     }
-
-//     const userImages = await starstorkImages.findOne({ uid });
-
-//     if (userImages) {
-//       const updatedImages = await starstorkImages.findOneAndUpdate(
-//         { uid },
-//         { $push: { image: { $each: savedImages } } }, 
-//         { new: true } 
-//       );
-//       return res.status(200).json({ message: 'Images added successfully', images: updatedImages });
-//     } else {
-//       const newImages = new starstorkImages({
-//         uid,
-//         image: savedImages
-//       });
-//       await newImages.save();
-//       return res.status(200).json({ message: 'First image uploaded successfully', images: newImages });
-//     }
-//   } catch (error) {
-//     console.error('Image upload failed:', error);
-//     res.status(500).send('Image upload failed');
-//   }
-// });
-
-
-
-// // Endpoint to get images for a specific user
-// app.get('/get-images/starstork/:uid', async (req, res) => {
-//   const { uid } = req.params;
-
-//   try {
-//     const userImages = await starstorkImages.findOne({ uid });
-//     if (!userImages) {
-//       return res.status(404).json({ images: [] });
-//     }
-//     return res.status(200).json({ images: userImages.image });
-//   } catch (error) {
-//     console.error('Error fetching images:', error);
-//     return res.status(500).send('Error fetching images');
-//   }
-// });
-
-// Route to create a new project folder
 app.post('/starmarg/createProject', async (req, res) => {
   const { uid, projectName } = req.body;
 
+  // Validate request body
+  if (!uid || !projectName) {
+    return res.status(400).json({ message: 'UID and Project Name are required' });
+  }
+
   try {
+    // Check if user exists in the database
     let userFolders = await starmarg_data.findOne({ uid });
 
     if (!userFolders) {
+      // If UID not found, create a new entry
       userFolders = new starmarg_data({
         uid,
         folders: [{ folderName: projectName }],
@@ -360,6 +248,7 @@ app.post('/starmarg/createProject', async (req, res) => {
       await userFolders.save();
       return res.status(201).json({ message: 'Folder created successfully' });
     } else {
+      // Check if folder already exists
       const folderExists = userFolders.folders.some(
         (folder) => folder.folderName === projectName
       );
@@ -367,16 +256,21 @@ app.post('/starmarg/createProject', async (req, res) => {
       if (folderExists) {
         return res.status(409).json({ message: 'Folder already exists' });
       } else {
+        // Add new folder to the user's folders
         userFolders.folders.push({ folderName: projectName });
         await userFolders.save();
         return res.status(201).json({ message: 'Folder created successfully' });
       }
     }
   } catch (error) {
-    console.log(error); // Add this to check the exact error
-    res.status(500).json({ message: 'Server error', error });
+    console.error('Error creating project folder:', error); // Improved logging
+    return res.status(500).json({
+      message: 'Internal Server Error',
+      error: error.message, // Provide error details for debugging
+    });
   }
 });
+
 
 //for fetching the data
 app.get('/starmarg/getProjects/:uid', async (req, res) => {
@@ -496,47 +390,62 @@ app.get('/starmarg/getImagesets', async (req, res) => {
   }
 });
 
-// Route to upload images to a specific imageset
+
+// Route to update nested imageset array
 app.post('/upload-images/starmarg/:uid', async (req, res) => {
   const { uid } = req.params;
   const { projectName, subfolderName, imagesetName, images } = req.body;
 
+  // Validate the request body
   if (!images || !Array.isArray(images) || images.length === 0) {
     return res.status(400).json({ message: 'No images provided' });
   }
 
   try {
-    const userDoc = await starmarg_data.findOne({ uid });
-    if (!userDoc) {
-      return res.status(404).json({ message: 'User not found' });
+    // Generate UUID for each image and prepare them for saving
+    const savedImages = images.map(img => ({
+      uuid: uuidv4(), // Assign a unique identifier
+      name: img.name || 'Unnamed Image',
+      base64: img.base64 || null,
+      driveLink: img.driveLink || null,
+    }));
+
+    // Update the nested imageset array directly using MongoDB's `$push` and `$each`
+    const updatedDoc = await starmarg_data.findOneAndUpdate(
+      {
+        uid, // Find by user ID
+        'folders.folderName': projectName, // Match the folder
+        'folders.subFolders.folderName': subfolderName, // Match the subfolder
+        'folders.subFolders.imagesets.folderName': imagesetName, // Match the imageset
+      },
+      {
+        $push: {
+          'folders.$[folder].subFolders.$[subfolder].imagesets.$[imageset].image': {
+            $each: savedImages, // Add images with UUIDs
+          },
+        },
+      },
+      {
+        arrayFilters: [
+          { 'folder.folderName': projectName },
+          { 'subfolder.folderName': subfolderName },
+          { 'imageset.folderName': imagesetName },
+        ],
+        new: true, // Return the updated document
+      }
+    );
+
+    // Check if the document was updated
+    if (!updatedDoc) {
+      return res.status(404).json({ message: 'Document or target imageset not found.' });
     }
 
-    const folder = userDoc.folders.find(f => f.folderName === projectName);
-    if (!folder) {
-      return res.status(404).json({ message: 'Project folder not found' });
-    }
-
-    const subfolder = folder.subFolders.find(sf => sf.folderName === subfolderName);
-    if (!subfolder) {
-      return res.status(404).json({ message: 'Subfolder not found' });
-    }
-
-    const imageset = subfolder.imagesets.find(imgSet => imgSet.folderName === imagesetName);
-    if (!imageset) {
-      return res.status(404).json({ message: 'Imageset not found' });
-    }
-
-    imageset.image.push(...images);
-
-    await userDoc.save();
-
-    res.status(200).json({ message: 'Images uploaded successfully' });
+    res.status(200).json({ message: 'Images uploaded successfully', updatedDoc });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error uploading images', error });
+    console.error('Error updating images:', error);
+    res.status(500).json({ message: 'Error updating images', error });
   }
 });
-
 
 
 
@@ -558,13 +467,12 @@ app.get('/get-images/starmarg/:uid', async (req, res) => {
     const imageset = subfolder.imagesets.find((is) => is.folderName === imagesetName);
     if (!imageset) return res.status(404).json({ message: 'Imageset not found' });
 
-    // Return images from the found imageset
     res.status(200).json({ images: imageset.image });
   } catch (error) {
+    console.error('Error fetching images:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 });
-
 
 // Start the server
 app.listen(PORT, () => {
