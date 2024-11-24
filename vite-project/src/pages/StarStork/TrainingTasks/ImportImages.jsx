@@ -145,7 +145,7 @@ const FileImportModal = ({ onClose }) => {
           )}
 
           {/* Drag and Drop Area */}
-          <div
+          {/* <div
             {...getRootProps({
               className:
                 'border-2 border-dashed border-neutral-500 rounded-lg p-6 text-center flex justify-center items-center text-neutral-400 min-h-[120px]',
@@ -153,7 +153,7 @@ const FileImportModal = ({ onClose }) => {
           >
             <input {...getInputProps()} />
             <p>Drop files here or click to select</p>
-          </div>
+          </div> */}
 
           {/* Selected Files List */}
           <div className="bg-neutral-800 rounded-lg p-4">

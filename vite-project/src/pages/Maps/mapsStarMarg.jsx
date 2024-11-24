@@ -23,7 +23,7 @@ const StarMapperNav = () => {
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg">Maps (1)</h2>
-          <Link to='/sm/map2'>
+          <Link to='/sm/mapEditor'>
         
           <button className="px-3 py-1 text-sm  border-gray-400 text-gray-400 hover:text-white">
             View on Map

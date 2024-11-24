@@ -58,6 +58,11 @@ import StatComp from "./pages/Services/Settings/Statistics/StatComp";
 import SecurityComp from "./pages/Services/Settings/Security/SecurityComp";
 import Redirect from "./pages/Authentication/redirect";
 import DronePlanner from "./pages/Maps/Map1";
+import StarMapperNav from "./pages/Maps/mapsStarMarg";
+import MapInterface from "./pages/Maps/starMargMapEditor";
+import MapModes from "./pages/Maps/mapModes";
+import MapCursor from "./pages/Maps/mapCursor";
+import MapCompare from "./pages/Maps/mapCompare";
 const clientId =
   "261778488059-r3p7jn1uctichj37qi3kq21j1fghclns.apps.googleusercontent.com";
 
@@ -134,6 +139,11 @@ const App = () => {
                 />
                 <Route path="/ss/dashboard" element={<Main />} />
                 <Route path="/sm/dashboard" element={<Mmain />} />
+                <Route path='/sm/map' element={<StarMapperNav />} />
+                <Route path='/sm/mapEditor' element={<MapInterface/>} />
+                <Route path="/sm/mapModes" element={<MapModes/>} />
+                <Route path="/sm/mapCursor" element={<MapCursor/>} />
+                <Route path="/sm/mapCompare" element={<MapCompare/>} />
                 <Route path="/images" element={<Images />} />
                 {/* Define the route for UploadImages */}
                 <Route path="/upload-images" element={<UploadImages />} />
@@ -177,6 +187,8 @@ const App = () => {
                 {/* <Route path="/verify-otp" element={<VerifyOtp />} /> */}
                 <Route path="/google_map" element={<GoogleMap/>} />
                 <Route path="/create-plan" element={<CreatePlan/>}/>
+
+                
               </Routes>
               {/* </ErrorBoundary> */}
             </Router>
