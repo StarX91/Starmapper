@@ -227,6 +227,9 @@ app.put('/api/google_login/:uid/delete-image', async (req, res) => {
   }
 });
 
+//starmarg backend
+
+// to create project
 app.post('/starmarg/createProject', async (req, res) => {
   const { uid, projectName } = req.body;
 
@@ -471,6 +474,186 @@ app.get('/get-images/starmarg/:uid', async (req, res) => {
   } catch (error) {
     console.error('Error fetching images:', error);
     res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+//starstork
+
+// Add or Update Project
+app.post('/starstork/add_project', async (req, res) => {
+  const { uid, projectName } = req.body;
+
+  try {
+    // Find the user by UID
+    let user = await starstork_data.findOne({ uid });
+
+    if (user) {
+      // Check if the folder name already exists
+      const folderExists = user.folders.some(
+        (folder) => folder.folderName === projectName
+      );
+
+      if (folderExists) {
+        return res.status(409).json({ message: 'Folder name already exists' });
+      }
+
+      // Add new folder
+      user.folders.push({ folderName : projectName });
+      await user.save();
+      return res.status(201).json({ message: 'Folder added successfully' });
+    } else {
+      // Create new user with the folder
+      user = new starstork_data({
+        uid,
+        folders: [{ folderName : projectName }],
+      });
+      await user.save();
+      return res.status(201).json({ message: 'User and folder created successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+// Route to fetch folders for a specific user
+app.get('/starstork/folders/:uid', async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const user = await starstork_data.findOne({ uid });
+    if (user) {
+      res.status(200).json({ projects: user.folders });
+    } else {
+      res.status(404).json({ message: 'No folders found for this user.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving folders.', error });
+  }
+});
+
+// Rename Project Folder
+app.put('/api/folders/rename', async (req, res) => {
+  const { userId, oldFolderName, newFolderName } = req.body;
+
+  try {
+    // Find the user and project folder to rename
+    const user = await starstork_data.findOne({ uid: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const project = user.folders.find(f => f.folderName === oldFolderName);
+
+    if (!project) {
+      return res.status(404).json({ message: 'Project folder not found' });
+    }
+
+    // Rename the folder
+    project.folderName = newFolderName;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Folder renamed successfully', project });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error renaming folder' });
+  }
+});
+
+// Delete Project Folder
+app.delete('/api/folders/delete', async (req, res) => {
+  const { userId, folderName } = req.body;
+
+  try {
+    // Find the user
+    const user = await starstork_data.findOne({ uid: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find and remove the project folder from the user's folders array
+    const folderIndex = user.folders.findIndex(f => f.folderName === folderName);
+
+    if (folderIndex === -1) {
+      return res.status(404).json({ message: 'Project folder not found' });
+    }
+
+    // Remove the folder from the array
+    user.folders.splice(folderIndex, 1);
+
+    await user.save();
+
+    res.status(200).json({ message: 'Folder deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting folder' });
+  }
+});
+
+// to get the imageset from starstork
+app.get('/api/projects/:uid', async (req, res) => {
+  try {
+    const user = await starmarg_data.findOne({ uid: req.params.uid });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user); // Send back the user data
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching projects', error });
+  }
+});
+
+// Upload Images to an ImageSet
+app.post('/api/upload-image-set', async (req, res) => {
+  try {
+    const { uid, folderName, taskName, imageSetName, images } = req.body;
+
+    if (!uid || !folderName || !taskName || !imageSetName || !images) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
+
+    // Find user by UID
+    const user = await starstork_data.findOne({ uid });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Find the project
+    const project = user.folders.find((folder) => folder.folderName === folderName);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found.' });
+    }
+
+    // Find the task
+    const task = project.imagesets.find((task) => task.folderName === taskName);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found.' });
+    }
+
+    // Find the image set
+    const imageSet = task.imagesets.find((set) => set.folderName === imageSetName);
+    if (!imageSet) {
+      return res.status(404).json({ message: 'Image set not found.' });
+    }
+
+    // Add images to the image set
+    images.forEach((img) => {
+      imageSet.image.push({
+        uuid: uuidv4(),
+        name: img.name,
+        base64: img.base64,
+      });
+    });
+
+    await user.save();
+    res.status(200).json({ message: 'Images uploaded successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 

@@ -21,7 +21,7 @@ const NewProjectModal = ({ isOpen, onClose, onSave }) => {
       contentLabel="Add New Project"
       className="bg-neutral-900 p-8 rounded-xl shadow-xl w-1/3 mx-auto mt-40"
       overlayClassName="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
-    >
+    >         
       {/* Modal Header 
       <h2 className="text-neutral-300 text-center text-xl font-semibold mb-6">
         Add New Project
@@ -65,18 +65,48 @@ export default NewProjectModal; */
 import React, { useState } from "react";
 import Modal from "react-modal"; // Ensure you install 'react-modal'
 import GoogleMap from "../../StarMarg/CreateProject/Map";
+import axios from "axios";
+
 const NewProjectModal = ({ isOpen, onClose, onSave }) => {
   const [projectName, setProjectName] = useState("");
 
-  const handleAddProject = () => {
+  const handleAddProject = async () => {
     if (projectName.trim()) {
-      onSave(projectName); // Call the function passed from the parent
-      setProjectName(""); // Clear the input field
-      onClose(); // Close the modal after adding the project
+      const uid = localStorage.getItem('uid'); // Retrieve UID from local storage
+      if (!uid) {
+        alert('UID not found. Please log in again.');
+        return;
+      }
+  
+      try {
+        const response = await axios.post("http://localhost:5000/starstork/add_project", {
+          uid,
+          projectName,
+        });
+  
+        if (response.status === 201) {
+          onSave(projectName); // Call the parent function to reflect the changes
+          setProjectName(''); // Clear input
+          localStorage.setItem("starstorkprojectname", projectName);
+          onClose(); // Close the modal
+          window.location.reload(); // Refresh to reflect changes
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 409) {
+          // Handle folder name conflict
+          alert("A folder with this name already exists. Please choose another name.");
+        } else {
+          // Handle other errors
+          console.error('Error adding project:', error);
+          alert('An error occurred while adding the project.');
+        }
+      }
     } else {
-      alert("Please enter a project name.");
+      alert('Please enter a project name.');
     }
   };
+  
+  
 
   return (
     <Modal

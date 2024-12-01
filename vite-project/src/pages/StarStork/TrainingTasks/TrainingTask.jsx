@@ -76,7 +76,7 @@ const TrainingTask = () => {
   };
 
   const openTaskModal = (index) => {
-    setSelectedProject(projects[index]);
+    setSelectedProject(folders[index]);
     setIsTaskNameModalOpen(true);
     setActiveStep("Create Task");
     setShowImagesComponent(false);

@@ -23,17 +23,11 @@ const taskname = new mongoose.Schema({
     createdAt : { type : Date , default : Date.now},
 })
 
-//project Schema
-const projectSchema = new mongoose.Schema({
-    folderName : { type : String , required : true , unique : true},
-    subFolders : [taskname],
-    createdAt : { type : Date , default : Date.now},
-})
 
 //multiple user
 const formultipleuser = new mongoose.Schema({
     uid : { type : String , required : true , unique : true},
-    folders : [projectSchema],
+    folders : [taskname],
 })
 
 module.exports = mongoose.model('starstork_database',formultipleuser);
