@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaFileImport } from "react-icons/fa";
@@ -10,6 +13,7 @@ import axios from 'axios';
 import StarStorkImages from "./ImagesStarStork";
 import FileImportModal from "../TrainingTasks/ImportImages";
 
+
 const TrainingTask = () => {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [isTaskNameModalOpen, setIsTaskNameModalOpen] = useState(false);
@@ -20,80 +24,95 @@ const TrainingTask = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [taskName, setTaskName] = useState("");
+  const [imagesetName , setImagesetName]=useState("");
   const [showImagesComponent, setShowImagesComponent] = useState(false);
   const [activeStep, setActiveStep] = useState("Create Task");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isImagesetModalOpen, setIsImagesetModalOpen] = useState(false);
+  const [imageModal , setImageModal] = useState(false);
   const [isTaskAssigned, setIsTaskAssigned] = useState(false);
   const [isAnnotated, setIsAnnotated] = useState(false);
   const [images, setImages] = useState([]);
-  const [folders,setFolders] = useState([]);
-  const [loading,setLoading] = useState([]);
-  const [newFolderName, setNewFolderName] = useState('');
-  
+  const [filterText, setFilterText] = useState('');
+  const [imageCollections, setImageCollections] = useState([]);
+  const [currentlyEditingIndex, setCurrentlyEditingIndex] = useState(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [newCollectionName, setNewCollectionName] = useState('');
+  const [currentDetails, setCurrentDetails] = useState(null);
+
+  const togglePopup = () => {
+    setIsPopupVisible(!isPopupVisible);
+    setNewCollectionName('');
+  };
+
+  const saveNewCollection = () => {
+    if (newCollectionName.trim()) {
+      const newCollection = {
+        name: newCollectionName,
+        date: new Date().toLocaleDateString(),
+      };
+      setImageCollections([...imageCollections, newCollection]);
+      togglePopup();
+    }
+  };
+
+  const removeCollection = (index, event) => {
+    event.stopPropagation();
+    const updatedCollections = imageCollections.filter((_, i) => i !== index);
+    setImageCollections(updatedCollections);
+    setCurrentlyEditingIndex(null);
+  };
+
+  const editCollectionName = (index, event) => {
+    event.stopPropagation();
+    const updatedName = prompt('Enter new name:', imageCollections[index].name);
+    if (updatedName?.trim()) {
+      const updatedCollections = [...imageCollections];
+      updatedCollections[index] = {
+        ...updatedCollections[index],
+        name: updatedName
+      };
+      setImageCollections(updatedCollections);
+    }
+    setCurrentlyEditingIndex(null);
+  };
+
+  const showDetails = (collection) => {
+    setCurrentDetails(collection);
+  };
+
+  const navigateBack = () => {
+    setCurrentDetails(null);
+  };
+
+  const filteredCollections = imageCollections.filter(collection =>
+    collection.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+
   const toggleFileImportModal = () => {
     setIsFileImportModalOpen(!isFileImportModalOpen);
   };
-const userId = localStorage.getItem("uid");
-  // Assuming you have a backend API to handle these operations.
-const renameFolderInBackend = async (oldFolderName, newFolderName) => {
-  try {
-    const response = await fetch('/api/folders/rename', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, oldFolderName, newFolderName }),
-    });
-    if (response.ok) {
-      console.log('Folder renamed successfully');
-    } else {
-      console.error('Failed to rename folder');
-    }
-  } catch (error) {
-    console.error('Error renaming folder', error);
-  }
-};
 
-const deleteFolderInBackend = async (folderName) => {
-  try {
-    const response = await fetch('/api/folders/delete', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, folderName }),
-    });
-    if (response.ok) {
-      console.log('Folder deleted successfully');
-    } else {
-      console.error('Failed to delete folder');
-    }
-  } catch (error) {
-    console.error('Error deleting folder', error);
-  }
-};
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const uid = localStorage.getItem("uid");
 
   useEffect(() => {
-    
-    const uid = localStorage.getItem("uid");
-    console.log(uid);
+    const fetchImages = async () => {
+      if (!uid) return; // No UID, don't fetch images
 
-    const fetchFolders = async () => {
-      if(!uid) return;
-
-      try{
-        const response = await axios.get(`http://localhost:5000/starstork/folders/${uid}`);
-          if(response.status === 200){
-            setFolders(response.data.projects);
-            console.log(response.data);
-          }
-      }catch (error){
-        console.error('Error fetching folders',error);
-      }finally{
-        setLoading(false);
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/get-images/starstork/${uid}`
+        );
+        setImages(response.data.images); // Assuming 'images' is an array of Base64 strings
+      } catch (error) {
+        console.error("Error fetching images", error);
       }
     };
 
-    fetchFolders();
-  },[]);
+    fetchImages();
+  }, [uid]);
 
   const handleAnnotateSuccess = () => {
     setIsAnnotated(true);
@@ -123,25 +142,30 @@ const navigate = useNavigate();
     setProjects((prevProjects) => [...prevProjects, newProject]);
   };
 
-  const renameProject = (index) => {
-    const project = folders[index];
-    const updatedFolderName = prompt('Enter new folder name', project.folderName);
-
-    if (updatedFolderName) {
-      setNewFolderName(updatedFolderName);
-      renameFolderInBackend(project.folderName, updatedFolderName);
-    }
+  const deleteProject = (index) => {
+    setProjects((prevProjects) =>
+      prevProjects.filter((_, projectIndex) => projectIndex !== index)
+    );
+    setEditingProjectIndex(null);
   };
 
-  const deleteProject = (index) => {
-    const project = folders[index];
-    if (window.confirm(`Are you sure you want to delete the folder "${project.folderName}"?`)) {
-      deleteFolderInBackend(project.folderName);
+  const renameProject = (index) => {
+    const newName = prompt(
+      "Enter the new name for the project:",
+      projects[index].name
+    );
+    if (newName) {
+      setProjects((prevProjects) =>
+        prevProjects.map((project, projectIndex) =>
+          projectIndex === index ? { ...project, name: newName } : project
+        )
+      );
     }
+    setEditingProjectIndex(null);
   };
 
   const openTaskModal = (index) => {
-    setSelectedProject(folders[index]);
+    setSelectedProject(projects[index]);
     setIsTaskNameModalOpen(true);
     setActiveStep("Create Task");
     setShowImagesComponent(false);
@@ -154,11 +178,27 @@ const navigate = useNavigate();
       );
       setIsTaskNameModalOpen(false);
       setTaskName("");
+      // setImageModal(true);
+      setShowImagesComponent(true);
+      setActiveStep("Images");
+      // setIsTaskAssigned(true);
+    } else {
+      alert("Task name cannot be empty");
+    }
+  };
+
+  const handleImagesetCreation = () => {
+    if (imagesetName.trim() !== "") {
+      console.log(
+        `Imageset "${imagesetName}" created for project: ${selectedProject.name}`
+      );
+      setImageModal(false);
+      setImagesetName("");
       setShowImagesComponent(true);
       setActiveStep("Images");
       setIsTaskAssigned(true);
     } else {
-      alert("Task name cannot be empty");
+      alert("Imageset name cannot be empty");
     }
   };
 
@@ -173,7 +213,7 @@ const navigate = useNavigate();
   const filteredProjects = projects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log(folders);
+
   return (
     <div>
       <Navbar />
@@ -259,8 +299,8 @@ const navigate = useNavigate();
             </div>
 
             <div className="flex-1 flex flex-wrap justify-start space-x-6 items-start">
-              {folders.length > 0  ? (
-                folders.map((project, index) => (
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map((project, index) => (
                   <div
                     key={index}
                     className="relative p-4 rounded-lg w-60 h-full flex flex-col cursor-pointer"
@@ -271,10 +311,10 @@ const navigate = useNavigate();
                     <div className="mt-2 flex justify-between items-center w-full">
                       <div>
                         <p className="text-neutral-300 text-md">
-                          {project.folderName}
+                          {project.name}
                         </p>
                         <p className="text-neutral-500 text-sm">
-                          {new Date(project.createdAt).toLocaleDateString()}
+                          {project.date}
                         </p>
                       </div>
 
@@ -322,107 +362,222 @@ const navigate = useNavigate();
             </div>
           </div>
         ) : (
-          <div className="flex flex-col lg:flex-row bg-neutral-900 m-4 sm:m-8 min-h-[550px] p-4 sm:p-8 rounded-2xl shadow-md lg:justify-between lg:items-start gap-4">
-  <h2 className="text-neutral-400 text-lg font-medium">
-    Project name / Imageset (0)
-  </h2>
-  {/* Display Uploaded Images */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
-    {userId ? (
-      images.length > 0 ? (
-        images.map((image, index) => (
+
+<div className="bg-neutral-900 h-96 p-6 m-6 min-h-[560px] rounded-lg shadow-md space-y-8 flex flex-col">
+{currentDetails ? (
+            <div className="flex flex-col lg:flex-row bg-neutral-900 m-4 sm:m-8 min-h-[550px] p-4 sm:p-8 rounded-2xl shadow-md lg:justify-between lg:items-start gap-4">
+            <h2 className="text-neutral-400 text-lg font-medium">
+              Project name / Imageset (0)
+            </h2>
+            {/* Display Uploaded Images */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+              {uid ? (
+                images.length > 0 ? (
+                  images.map((image, index) => (
+                    <div
+                      key={index}
+                      className="border border-neutral-500 p-2 rounded-lg"
+                    >
+                      {image.data ? (
+                        <a
+                          href={`data:image/png;base64,${image.data}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={`data:image/png;base64,${image.data}`}
+                            alt={`Image ${index + 1}`}
+                            className="w-full h-auto"
+                          />
+                        </a>
+                      ) : image.driveLink ? (
+                        <a
+                          href={image.driveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={image.driveLink}
+                            alt={`Drive Image ${index + 1}`}
+                            className="w-full h-auto"
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-neutral-500">No images uploaded.</p>
+                )
+              ) : (
+                <p className="text-neutral-500">Please log in to view your images.</p>
+              )}
+            </div>
+            <div className="relative inline-block text-left">
+              <div>
+              <button
+                onClick={() => {
+                  setDropdownOpen(!dropdownOpen);
+                }}
+                className="text-neutral-300 border border-neutral-400 p-3 rounded-md whitespace-nowrap"
+              >
+                + Imageset
+              </button>
+              </div>
+          
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-neutral-900 shadow-lg ring-1 ring-black ring-opacity-5 z-10">
+                  <div
+                    className="py-2 bg-black rounded-lg"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    <div>
+                    <button
+                      onClick={() => {
+                        // setDropdownOpen(false);
+                        // toggleFileImportModal();
+                        toggleFileImportModal();
+                      }}
+                      className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+                    >
+                      <FaFileImport className="mr-3" />
+                      Import
+                    </button>
+                    {isFileImportModalOpen && (
+                    <FileImportModal onClose={toggleFileImportModal} />
+                  )}
+                    </div>
+                  
+          
+                    <button
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        toggleImagesetModal();
+                      }}
+                      className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
+                    >
+                      <CgAddR className="mr-3" />
+                      Create
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+) : (
+  <>
+    <div className="flex justify-between items-center">
+      <div className="relative flex items-center w-1/5">
+        <FaSearch className="absolute left-3 text-neutral-500" />
+        <input
+          type="text"
+          placeholder="Search Imagesets"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="pl-10 pr-4 py-2 w-full bg-neutral-800 text-neutral-400 rounded-md focus:outline-none"
+        />
+      </div>
+
+      <h2 className="text-neutral-500 text-lg font-medium">
+        Imagesets
+      </h2>
+
+      <button
+        className="bg-neutral-900 text-neutral-300 py-2 px-4 rounded-md focus:outline-none hover:border-neutral-500 border"
+        onClick={togglePopup}
+      >
+        + New Imageset
+      </button>
+    </div>
+
+    <div className="flex-1 flex flex-wrap justify-start space-x-6 items-start">
+      {filteredCollections.length > 0 ? (
+        filteredCollections.map((collection, index) => (
           <div
             key={index}
-            className="border border-neutral-500 p-2 rounded-lg"
+            className="relative p-4 rounded-lg w-60 h-full flex flex-col cursor-pointer"
+            onClick={() => showDetails(collection)}
           >
-            {image.data ? (
-              <a
-                href={`data:image/png;base64,${image.data}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={`data:image/png;base64,${image.data}`}
-                  alt={`Image ${index + 1}`}
-                  className="w-full h-auto"
-                />
-              </a>
-            ) : image.driveLink ? (
-              <a
-                href={image.driveLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={image.driveLink}
-                  alt={`Drive Image ${index + 1}`}
-                  className="w-full h-auto"
-                />
-              </a>
-            ) : (
-              <></>
-            )}
+            <div className="bg-neutral-700 h-40 w-40 rounded-md"></div>
+
+            <div className="mt-2 flex justify-between items-center w-full">
+              <div>
+                <p className="text-neutral-300 text-md">
+                  {collection.name}
+                </p>
+                <p className="text-neutral-500 text-sm">
+                  {collection.date}
+                </p>
+              </div>
+
+              <div className="relative">
+                <button
+                  className="text-neutral-400 mr-12 hover:text-neutral-300 mb-4 focus:outline-none font-bold"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentlyEditingIndex(currentlyEditingIndex === index ? null : index);
+                  }}
+                >
+                  ...
+                </button>
+                {currentlyEditingIndex === index && (
+                  <div className="absolute right-0 mt-2 w-24 bg-neutral-800 text-neutral-300 rounded-md shadow-lg">
+                    <button
+                      className="block w-full px-2 py-1 hover:bg-neutral-700 text-left"
+                      onClick={(e) => editCollectionName(index, e)}
+                    >
+                      Rename
+                    </button>
+                    <button
+                      className="block w-full px-2 py-1 hover:bg-neutral-700 text-left"
+                      onClick={(e) => removeCollection(index, e)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         ))
       ) : (
-        <p className="text-neutral-500">No images uploaded.</p>
-      )
-    ) : (
-      <p className="text-neutral-500">Please log in to view your images.</p>
-    )}
-  </div>
-  <div className="relative inline-block text-left">
-    <div>
-    <button
-      onClick={() => {
-        setDropdownOpen(!dropdownOpen);
-      }}
-      className="text-neutral-300 border border-neutral-400 p-3 rounded-md whitespace-nowrap"
-    >
-      + Imageset
-    </button>
+        <p className="text-neutral-400">No Imagesets found.</p>
+      )}
     </div>
 
-    {dropdownOpen && (
-      <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-neutral-900 shadow-lg ring-1 ring-black ring-opacity-5 z-10">
-        <div
-          className="py-2 bg-black rounded-lg"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="options-menu"
-        >
-          <div>
-          <button
-            onClick={() => {
-              // setDropdownOpen(false);
-              // toggleFileImportModal();
-              toggleFileImportModal();
-            }}
-            className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
-          >
-            <FaFileImport className="mr-3" />
-            Import
-          </button>
-          {isFileImportModalOpen && (
-          <FileImportModal onClose={toggleFileImportModal} />
-        )}
+    {isPopupVisible && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="bg-neutral-800 p-6 rounded-lg w-96">
+          <h3 className="text-neutral-300 text-lg mb-4">Create New Imagesets</h3>
+          <input
+            type="text"
+            placeholder="Collection Name"
+            value={newCollectionName}
+            onChange={(e) => setNewCollectionName(e.target.value)}
+            className="w-full bg-neutral-700 text-neutral-300 p-2 rounded-md mb-4 focus:outline-none"
+          />
+          <div className="flex justify-end space-x-2">
+            <button
+              className="px-4 py-2 text-neutral-400 hover:text-neutral-300"
+              onClick={togglePopup}
+            >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              onClick={saveNewCollection}
+            >
+              Save
+            </button>
           </div>
-        
-
-          <button
-            onClick={() => {
-              setDropdownOpen(false);
-              toggleImagesetModal();
-            }}
-            className="text-neutral-400 group flex items-center px-4 py-2 text-sm hover:bg-neutral-700 w-full"
-          >
-            <CgAddR className="mr-3" />
-            Create
-          </button>
         </div>
       </div>
     )}
-  </div>
+  </>
+)}
 </div>
         )}
 
@@ -480,6 +635,46 @@ const navigate = useNavigate();
                       onClick={handleCreateTask}
                     >
                       Create Task
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+{imageModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+                <div className="bg-neutral-900 p-8 shadow-lg  rounded-2xl w-1/4">
+                  <h2 className="text-neutral-300 text-center text-xl font-medium mb-2">
+                    Enter Imageset Name
+                  </h2>
+                  <p className="text-neutral-400 text-center mb-6">
+                   Create a immageset (optional)
+                  </p>
+                  <input
+                    type="text"
+                    value={imagesetName}
+                    onChange={(e) => setImagesetName(e.target.value)}
+                    className="p-3 bg-neutral-800 text-neutral-300 rounded-md w-full focus:outline-none"
+                    placeholder="Enter name"
+                  />
+                  <div className="flex justify-between mt-6">
+                    <button
+                      className="bg-neutral-900 text-neutral-400 py-2 px-10 rounded-md focus:outline-none hover:border-neutral-300 border border-neutral-400"
+                      onClick={() => {
+                        setImageModal(false);
+                        setImagesetName("");
+                        setShowImagesComponent(true);
+                        setActiveStep("Images");
+                        setIsTaskAssigned(true); // Reset the task name
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="bg-neutral-200 text-neutral-900 py-2 px-6 rounded-md focus:outline-none font-semibold hover:bg-neutral-200"
+                      onClick={handleImagesetCreation}
+                    >
+                      Create Imageset
                     </button>
                   </div>
                 </div>
